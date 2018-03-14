@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace Util
 {
@@ -9,11 +8,12 @@ namespace Util
     public class ScaleToCameraView : MonoBehaviour
     {
         [SerializeField]
-        Camera cam = null;
-        [SerializeField]
-        Vector2 ScaleSize = Vector2.zero;
+        private Camera cam = null;
 
-        void Start()
+        [SerializeField]
+        private Vector2 ScaleSize = Vector2.zero;
+
+        private void Start()
         {
             Vector2 tmp = ScaleSize / 100f;
 
@@ -36,7 +36,7 @@ namespace Util
             transform.rotation = cam.transform.rotation;
         }
 
-        void OnDrawGizmosSelected()
+        private void OnDrawGizmosSelected()
         {
             Vector2 tmp = ScaleSize / 100f;
 

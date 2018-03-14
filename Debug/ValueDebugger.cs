@@ -1,9 +1,7 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
-
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Util.Debugger
 {
@@ -12,13 +10,13 @@ namespace Util.Debugger
     /// </summary>
     public class ValueDebugger : MonoBehaviour
     {
-        static ValueDebugger instance;
+        private static ValueDebugger instance;
 
         protected Dictionary<string, object> Values;
         protected Text t;
 
         /// <summary>
-        /// Value that will be logged. 
+        /// Value that will be logged.
         /// Also create the object that will be rendered onscreen completely by code so it does not need a prefab
         /// </summary>
         /// <param name="name">Value's name so you can find it back</param>
@@ -34,7 +32,7 @@ namespace Util.Debugger
             if (instance == null)
             {
                 ///Make object if it does not exist
-                //Canvas 
+                //Canvas
                 GameObject g = new GameObject();
 
                 Canvas c = g.AddComponent<Canvas>();
@@ -73,16 +71,14 @@ namespace Util.Debugger
                 rt.sizeDelta = new Vector2(-20, -40);
 
                 rt.anchoredPosition = new Vector2(-20, 0);
-                
 
                 Image I = g3.AddComponent<Image>();
                 I.color = new Color(0.1f, 0.1f, 0.1f, 0.7f);
 
-
                 g.name = "util.DebugVisual";
             }
 
-            if (instance && !instance.transform.parent.gameObject.activeSelf) 
+            if (instance && !instance.transform.parent.gameObject.activeSelf)
                 instance.transform.parent.gameObject.SetActive(true);
 
             if (instance.Values.Keys.Contains(name))
@@ -95,15 +91,14 @@ namespace Util.Debugger
             }
         }
 
-        
-        void Awake()
+        private void Awake()
         {
             instance = this;
             t = GetComponent<Text>();
             Values = new Dictionary<string, object>();
         }
 
-        void Update()
+        private void Update()
         {
             if (!Debugger.DebugEnabled)
                 transform.parent.gameObject.SetActive(false);
@@ -111,17 +106,17 @@ namespace Util.Debugger
             Process();
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             instance = null;
         }
 
-        string ts;
+        private string ts;
 
         /// <summary>
         /// create the string that will be displayed on screen
         /// </summary>
-        void Process()
+        private void Process()
         {
             ts = "";
 
@@ -142,7 +137,7 @@ namespace Util.Debugger
         public static bool DebugEnabled = true;
 
         /// <summary>
-        /// Value that will be logged. 
+        /// Value that will be logged.
         /// Also create the object that will be rendered onscreen completely by code so it does not need a prefab
         /// </summary>
         /// <param name="name">Value's name so you can find it back</param>

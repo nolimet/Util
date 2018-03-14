@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Util.Update
 {
     public class BaseClass : MonoBehaviour, IUpdatable
     {
         // Use this for initialization
-        void Start()
+        private void Start()
         {
             UpdateManager.addUpdateAble(this);
         }

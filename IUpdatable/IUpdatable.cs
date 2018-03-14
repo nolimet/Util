@@ -1,10 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Util.Update
+﻿namespace Util.Update
 {
-
     public interface IUpdatable
     {
         //Update called once a frame

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace Util
 {
@@ -8,9 +7,8 @@ namespace Util
     /// </summary>
     public class SnapToScreenPoint : MonoBehaviour
     {
-
         [SerializeField]
-        new Camera camera;
+        private new Camera camera;
 
         /// <summary>
         /// Position on screen
@@ -20,7 +18,7 @@ namespace Util
         public Vector3 screenPosition = Vector3.zero;
 
         /// <summary>
-        /// Sprite size in pixels to make sure it's does not get streched 
+        /// Sprite size in pixels to make sure it's does not get streched
         /// </summary>
         [Tooltip("Sprite's Size in pixel used to make sure it's scaled correctly")]
         public Vector2 StartSize = Vector2.one;
@@ -31,11 +29,12 @@ namespace Util
         /// Should the object be moved in this direction
         /// </summary>
         [SerializeField, Tooltip("Should Object be moved in this direction?")]
-        bool Vertical = false, Horizontal = false;
-        [SerializeField, Tooltip("use center point")]
-        bool UsePivot = false;
+        private bool Vertical = false, Horizontal = false;
 
-        void Start()
+        [SerializeField, Tooltip("use center point")]
+        private bool UsePivot = false;
+
+        private void Start()
         {
             if (camera == null)
                 camera = Camera.main;
@@ -54,12 +53,12 @@ namespace Util
             //}
         }
 
-        void Update()
+        private void Update()
         {
             DoMove();
         }
 
-        void DoMove()
+        private void DoMove()
         {
             Vector3 p1 = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
 
@@ -87,7 +86,6 @@ namespace Util
                         p1.x += (transform.localScale.x * PivotPosition.x) * StartSize.x;
                     else
                         p1.x -= (transform.localScale.x * PivotPosition.x) * StartSize.x;
-
             }
 
             transform.position = p1;

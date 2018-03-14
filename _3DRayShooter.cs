@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace Util
 {
     public class _3DRayShooter : MonoBehaviour
     {
-
         public int Range;
 
         [SerializeField]
@@ -13,7 +11,7 @@ namespace Util
 
         private Vector3 ClickOffSet;
 
-        void Update()
+        private void Update()
         {
             if (Input.GetMouseButton(0))
             {
@@ -38,7 +36,7 @@ namespace Util
             }
         }
 
-        void selectObject()
+        private void selectObject()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(ray, 100);
@@ -64,12 +62,11 @@ namespace Util
                         ClickOffSet.z = -1f;
                         return;
                     }
-
                 }
             }
         }
 
-        Vector3 getNewPos()
+        private Vector3 getNewPos()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(ray, Range);

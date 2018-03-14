@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+
 namespace Util.UI
 {
     /// <summary>
@@ -12,7 +12,7 @@ namespace Util.UI
         public ScrollRect scrollRect;
         public float StartValue;
 
-        void Start()
+        private void Start()
         {
             slider.value = StartValue;
             scrollRect.verticalNormalizedPosition = StartValue;

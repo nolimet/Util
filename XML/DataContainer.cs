@@ -1,8 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Xml.Serialization;
-using System.IO;
+using UnityEngine;
 
 namespace Util.XML
 {
@@ -18,7 +16,6 @@ namespace Util.XML
             try
             {
                 var serializer = new XmlSerializer(typeof(DataContainer));
-
 
                 if (!Directory.Exists(pathpoint))
                     System.IO.Directory.CreateDirectory(Path.Combine(Application.dataPath, path));

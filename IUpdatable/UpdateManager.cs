@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+
 namespace Util.Update
 {
     public class UpdateManager : MonoBehaviour
@@ -20,10 +20,11 @@ namespace Util.Update
                 if (_instance)
                     return _instance;
 
-                Debug.LogError("NO GAMEMANGER FOUND! Check what is calling it");
+                Debug.LogError("NO UPDATEMANAGER FOUND! Check what is calling it");
                 return null;
             }
         }
+
         private static UpdateManager _instance;
 
         /// <summary>
@@ -31,10 +32,11 @@ namespace Util.Update
         /// </summary>
         [SerializeField, ReadOnly]
         private int updatablesCount;
+
         private List<IUpdatable> updateAbles;
         private List<IContinuesUpdateAble> continuesUpdateables;
 
-        bool paused = false;
+        private bool paused = false;
 
         // Use this for initialization
         private void Awake()
@@ -54,10 +56,10 @@ namespace Util.Update
                 List<IUpdatable> tmp = updateAbles.ToList();
                 tmp.ForEach(i => i.IUpdate());
             }
-            
+
             continuesUpdateables.ForEach(i => i.IContinuesUpdate());
         }
-        
+
         public static void addUpdateAble(IUpdatable i)
         {
             if (!instance.updateAbles.Contains(i))
@@ -75,7 +77,7 @@ namespace Util.Update
             if (instance.updateAbles.Contains(i))
                 instance.updateAbles.Remove(i);
         }
-        
+
         public static void removeContinuesUpdateAble(IContinuesUpdateAble i)
         {
             if (instance.continuesUpdateables.Contains(i))

@@ -1,23 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Util.Serial
 {
-
     [Serializable()]
     public class SerializableDictionary<TKey, TVal> : Dictionary<TKey, TVal>, IXmlSerializable, ISerializable
     {
         #region Constants
+
         private const string DictionaryNodeName = "Dictionary";
         private const string ItemNodeName = "Item";
         private const string KeyNodeName = "Key";
         private const string ValueNodeName = "Value";
-        #endregion
+
+        #endregion Constants
+
         #region Constructors
+
         public SerializableDictionary()
         {
         }
@@ -47,7 +49,8 @@ namespace Util.Serial
         {
         }
 
-        #endregion
+        #endregion Constructors
+
         #region ISerializable Members
 
         protected SerializableDictionary(SerializationInfo info, StreamingContext context)
@@ -71,7 +74,8 @@ namespace Util.Serial
             }
         }
 
-        #endregion
+        #endregion ISerializable Members
+
         #region IXmlSerializable Members
 
         void IXmlSerializable.WriteXml(System.Xml.XmlWriter writer)
@@ -128,8 +132,10 @@ namespace Util.Serial
             return null;
         }
 
-        #endregion
+        #endregion IXmlSerializable Members
+
         #region Private Properties
+
         protected XmlSerializer ValueSerializer
         {
             get
@@ -153,10 +159,14 @@ namespace Util.Serial
                 return keySerializer;
             }
         }
-        #endregion
+
+        #endregion Private Properties
+
         #region Private Members
+
         private XmlSerializer keySerializer = null;
         private XmlSerializer valueSerializer = null;
-        #endregion
+
+        #endregion Private Members
     }
 }

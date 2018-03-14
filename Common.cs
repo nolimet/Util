@@ -1,9 +1,5 @@
-﻿
-
+﻿using System.Linq;
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 /// <summary>
 /// Util libary
@@ -78,7 +74,7 @@ namespace Util
             }
             center /= obj.transform.childCount; //center is average center of children
 
-            //Now you have a center, calculate the bounds by creating a zero sized 'Bounds', 
+            //Now you have a center, calculate the bounds by creating a zero sized 'Bounds',
             bounds = new Bounds(center, Vector3.zero);
 
             foreach (Transform child in obj.transform)
@@ -109,7 +105,7 @@ namespace Util
                 }
                 center /= obj.transform.childCount; //center is average center of children
 
-                //Now you have a center, calculate the bounds by creating a zero sized 'Bounds', 
+                //Now you have a center, calculate the bounds by creating a zero sized 'Bounds',
                 bounds = new Bounds(center, Vector3.zero);
 
                 foreach (Transform child in obj.transform)
@@ -135,7 +131,7 @@ namespace Util
                 }
                 center /= i; //center is average center of children
 
-                //Now you have a center, calculate the bounds by creating a zero sized 'Bounds', 
+                //Now you have a center, calculate the bounds by creating a zero sized 'Bounds',
                 bounds = new Bounds(center, Vector3.zero);
 
                 foreach (Transform child in obj.transform)
@@ -163,7 +159,6 @@ namespace Util
             int i = 0;
             string n;
 
-
             for (int j = 0; j < IgnorNameTags.Length; j++)
             {
                 IgnorNameTags[j] = IgnorNameTags[j].ToLower();
@@ -182,7 +177,7 @@ namespace Util
             }
             center /= i; //center is average center of children
 
-            //Now you have a center, calculate the bounds by creating a zero sized 'Bounds', 
+            //Now you have a center, calculate the bounds by creating a zero sized 'Bounds',
             bounds = new Bounds(center, Vector3.zero);
 
             foreach (Transform child in obj.transform)
@@ -211,7 +206,7 @@ namespace Util
             }
             center /= objs.Length; //center is average center of children
 
-            //Now you have a center, calculate the bounds by creating a zero sized 'Bounds', 
+            //Now you have a center, calculate the bounds by creating a zero sized 'Bounds',
             bounds = new Bounds(center, Vector3.zero);
 
             foreach (Transform child in objs)
@@ -220,10 +215,12 @@ namespace Util
             }
             return bounds;
         }
+
         public static Bounds getBounds(this Transform obj)
         {
             return obj.gameObject.GetComponent<SpriteRenderer>().bounds;
         }
+
         /// <summary>
         /// Draw the bounds of a object
         /// </summary>
@@ -251,7 +248,7 @@ namespace Util
 
         public static float CalculateJumpVerticalSpeed(float targetJumpHeight)
         {
-            // From the jump height and gravity we deduce the upwards speed 
+            // From the jump height and gravity we deduce the upwards speed
             // for the character to reach at the apex.
             Debug.Log(2f * targetJumpHeight * Physics2D.gravity.y);
             return Mathf.Sqrt(2f * targetJumpHeight * Physics2D.gravity.y);
@@ -292,10 +289,8 @@ namespace Util
             return new Vector2(obj.width, obj.height);
         }
 
-
         public static void ScaleSpriteToFitScreen(SpriteRenderer spriteRenderer, bool preserveAspect)
         {
-
             Vector3 newScale = Vector3.one;
 
             float width = spriteRenderer.sprite.bounds.size.x;
@@ -309,7 +304,7 @@ namespace Util
 
             if (preserveAspect)
             {
-                if(newScale.x> newScale.y)
+                if (newScale.x > newScale.y)
                 {
                     newScale.y = newScale.x;
                 }
@@ -336,10 +331,10 @@ namespace Util
             float radians = degrees * Mathf.Deg2Rad;
              float sin = Mathf.Sin(radians);
              float cos = Mathf.Cos(radians);
-         
+
              float tx = v.x;
              float ty = v.y;
- 
+
              return new Vector2(cos * tx - sin * ty, sin * tx + cos * ty);
             */
             return Quaternion.Euler(0, 0, degrees) * v;
@@ -353,7 +348,7 @@ namespace Util
         /// <returns>Rotated Vector2</returns>
         public static Vector2 Rotate(this Vector2 v, Quaternion rotation)
         {
-            return new Quaternion(0,0,rotation.z,rotation.w) * v;
+            return new Quaternion(0, 0, rotation.z, rotation.w) * v;
         }
     }
 }

@@ -1,15 +1,19 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
+
 #if UNITY_EDITOR
+
 using UnityEditor;
+
 #endif
+
 namespace Util
 {
     public class ReadOnlyAttribute : PropertyAttribute
     {
-
     }
+
 #if UNITY_EDITOR
+
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyDrawer : PropertyDrawer
     {
@@ -28,5 +32,6 @@ namespace Util
             GUI.enabled = true;
         }
     }
+
 #endif
 }

@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace Util.Debugger
 {
     public class DebugGrid : MonoBehaviour
     {
-
         public int height, width;
 
         public Vector2 A;
@@ -13,11 +11,13 @@ namespace Util.Debugger
         public Vector2 C;
 
         [SerializeField]
-        float K = 1;
+        private float K = 1;
+
         [SerializeField]
-        float L = 1;
+        private float L = 1;
+
         [SerializeField]
-        float j = 1;
+        private float j = 1;
 
         public enum modes
         {
@@ -25,16 +25,17 @@ namespace Util.Debugger
             VectorTriangle,
             line
         }
+
         public modes Mode;
 
-        bool state;
+        private bool state;
         public float MaxDelay;
-        float delay = 1f;
+        private float delay = 1f;
 
         public Transform[] points;
 
         // Use this for initialization
-        void Start()
+        private void Start()
         {
             points[0].name = "A";
             points[1].name = "B";
@@ -45,9 +46,8 @@ namespace Util.Debugger
         }
 
         // Update is called once per frame
-        void Update()
+        private void Update()
         {
-
             int k = 0;
             if (delay >= MaxDelay)
             {
@@ -60,7 +60,6 @@ namespace Util.Debugger
                     Debug.DrawLine(new Vector3(j - (width / 2f), height / -2f, k), new Vector3(j - (width / 2f), height / 2f, k), Color.gray, MaxDelay);
                 }
                 delay = 0;
-
 
                 if (Mode == modes.Vectoradd)
                 {
@@ -128,7 +127,6 @@ namespace Util.Debugger
                         {
                             points[i].name = "B";
                         }
-
                     }
                 }
 
@@ -138,6 +136,7 @@ namespace Util.Debugger
             }
             delay += Time.deltaTime;
         }
+
         public static Color randomColor()
         {
             // float numb = 0.0039215686274509803921568627451f;
@@ -149,17 +148,18 @@ namespace Util.Debugger
 
             return output;
         }
-        float lineY(float x)
+
+        private float lineY(float x)
         {
             return (j - K * x) / L;
         }
 
-        float LineX(float x)
+        private float LineX(float x)
         {
             return (j - L * x) / K;
-
         }
-        void OnGUI()
+
+        private void OnGUI()
         {
         }
     }

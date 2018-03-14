@@ -12,7 +12,6 @@ namespace Util
 
     public static class Noise
     {
-
         public static NoiseMethod[] valueMethods = {
         Value1D,
         Value2D,

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace Util
 {
@@ -19,8 +18,8 @@ namespace Util
     [AddComponentMenu("Camera-Control/Mouse Look")]
     public class MouseLook : MonoBehaviour
     {
-
         public enum RotationAxes { MouseXAndY = 0, MouseX = 1, MouseY = 2 }
+
         public RotationAxes axes = RotationAxes.MouseXAndY;
         public float sensitivityX = 15F;
         public float sensitivityY = 15F;
@@ -31,16 +30,16 @@ namespace Util
         public float minimumY = -60F;
         public float maximumY = 60F;
 
-        float rotationY = 0F;
+        private float rotationY = 0F;
 
-        bool mouseDown;
+        private bool mouseDown;
 
-        void Update()
+        private void Update()
         {
             if (Input.GetMouseButtonDown(1))
             {
-                mouseDown = true;                
-                Cursor.lockState =  CursorLockMode.Locked;
+                mouseDown = true;
+                Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
             if (Input.GetMouseButtonUp(1))
@@ -70,7 +69,8 @@ namespace Util
                 }
             }
         }
-        void Start()
+
+        private void Start()
         {
             // Make the rigid body not change rotation
             if (GetComponent<Rigidbody>())

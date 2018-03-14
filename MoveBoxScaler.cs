@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class MoveBoxScaler : MonoBehaviour {
-
+public class MoveBoxScaler : MonoBehaviour
+{
     [SerializeField]
-    new Camera camera;
+    private new Camera camera;
 
     public Vector3 screenSize = Vector3.zero;
-    void Awake()
+
+    private void Awake()
     {
         Vector3 p1 = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
 

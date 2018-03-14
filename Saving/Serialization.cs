@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -21,6 +20,7 @@ namespace Util.Serial
         private static extern void WindowAlert(string message);
 
         #region fileSaveSettings
+
         /// <summary>
         /// File types that are defined.
         /// </summary>
@@ -37,6 +37,7 @@ namespace Util.Serial
         /// Location of the save data
         /// </summary>
         public static string saveFolderName = "GameData";
+
         /// <summary>
         /// A dictonary contain information related to a filetype
         /// </summary>
@@ -57,7 +58,8 @@ namespace Util.Serial
             { fileTypes.gameState,  "Saves\\"+"GameState"   },
             { fileTypes.wave,       "Waves"     },
         };
-        #endregion
+
+        #endregion fileSaveSettings
 
         /// <summary>
         /// Generates a string for where the file is located
@@ -66,7 +68,6 @@ namespace Util.Serial
         /// <returns></returns>
         public static string SaveLocation(fileTypes fileType)
         {
-            
             string saveLocation = Application.dataPath;
             if (!Application.isEditor)
                 saveLocation += "/..";
@@ -91,7 +92,7 @@ namespace Util.Serial
         {
             return fileName + fileExstentions[fileType];
         }
-        
+
         /// <summary>
         /// Save file to disk
         /// </summary>
@@ -117,16 +118,13 @@ namespace Util.Serial
             }
             catch (Exception e)
             {
-
                 PlatformSafeMessage("Failed to Save: " + e.Message);
             }
-
 
             if (Application.platform == RuntimePlatform.WebGLPlayer)
                 SyncFiles();
 
             //Debug.Log(System.DateTime.Now + " Saved file: " + saveFile);
-
         }
 
         /// <summary>
@@ -142,7 +140,6 @@ namespace Util.Serial
             string saveFile = SaveLocation(fileType);
             saveFile += GetFileType(fileName, fileType);
             bool returnval = false;
-
 
             if (!File.Exists(saveFile))
             {
@@ -162,11 +159,12 @@ namespace Util.Serial
             return returnval;
         }
 
-        public static T Load<T> (string fileName, fileTypes fileType = 0, bool fileNameHasPointer = false){
+        public static T Load<T>(string fileName, fileTypes fileType = 0, bool fileNameHasPointer = false)
+        {
             string saveFile;
             if (!fileNameHasPointer)
             {
-                 saveFile = SaveLocation(fileType);
+                saveFile = SaveLocation(fileType);
                 saveFile += GetFileType(fileName, fileType);
             }
             else
@@ -188,7 +186,7 @@ namespace Util.Serial
                 FileStream stream = new FileStream(saveFile, FileMode.Open);
                 T data = (T)formatter.Deserialize(stream);
                 outputData = data;
-                
+
                 stream.Close();
             }
             return outputData;
@@ -209,6 +207,5 @@ namespace Util.Serial
                 Debug.Log(message);
             }
         }
-
     }
 }

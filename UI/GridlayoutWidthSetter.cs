@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
-using System.Collections;
+
 namespace Util.UI
 {
     public class GridlayoutWidthSetter : MonoBehaviour
     {
-        RectTransform rt;
-        UnityEngine.UI.GridLayoutGroup g;
-        CustomGrid c;
+        private RectTransform rt;
+        private UnityEngine.UI.GridLayoutGroup g;
+        private CustomGrid c;
         public int ChildrenNeededToScroll = 8;
         public bool onlySetContainerHeight = true;
         public bool onlyUseActiveChildren = true;
-        int childrenLast = 0;
-        int ChildrenCount = 0;
-        Vector2 spacing, cellSize;
+        private int childrenLast = 0;
+        private int ChildrenCount = 0;
+        private Vector2 spacing, cellSize;
 
-        void Awake()
+        private void Awake()
         {
             rt = (RectTransform)transform;
 
@@ -33,7 +33,6 @@ namespace Util.UI
                     c.ObjSize = new Vector2(rt.rect.width, c.ObjSize.y);
                 cellSize = c.ObjSize;
                 spacing = c.maxSpacing;
-
             }
         }
 
@@ -56,17 +55,16 @@ namespace Util.UI
             }
         }
 
-        void Update()
+        private void Update()
         {
             ChildrenCount = activeChildCount();
             if (childrenLast != ChildrenCount)
             {
-
                 ForceUpdate();
             }
         }
 
-        int activeChildCount()
+        private int activeChildCount()
         {
             int r = 0;
             foreach (Transform t in transform)

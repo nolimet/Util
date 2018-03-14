@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace Util
 {
@@ -10,7 +9,7 @@ namespace Util
         private bool mouseRightDown;
         private bool NoRigiBody = false;
 
-        void Update()
+        private void Update()
         {
             float hor = Input.GetAxis("Horizontal");
             float ver = Input.GetAxis("Vertical");
