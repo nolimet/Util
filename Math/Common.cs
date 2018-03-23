@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections
 
 namespace Utils.Math{
-  public partial static class Math{
+  public static partial class Math{
   
       //linePnt - point the line passes through
       //lineDir - unit vector in direction of line, either direction works
