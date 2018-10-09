@@ -7,17 +7,17 @@ namespace Util.Update
         // Use this for initialization
         private void Start()
         {
-            UpdateManager.addUpdateAble(this);
+            UpdateManager.AddUpdateAble(this);
         }
 
         private void OnEnable()
         {
-            UpdateManager.addUpdateAble(this);
+            UpdateManager.AddUpdateAble(this);
         }
 
         private void OnDisable()
         {
-            UpdateManager.removeUpdateAble(this);
+            UpdateManager.RemoveUpdateAble(this);
         }
 
         public virtual void IUpdate()

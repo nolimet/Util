@@ -60,25 +60,25 @@ namespace Util.Update
             continuesUpdateables.ForEach(i => i.IContinuesUpdate());
         }
 
-        public static void addUpdateAble(IUpdatable i)
+        public static void AddUpdateAble(IUpdatable i)
         {
             if (!instance.updateAbles.Contains(i))
                 instance.updateAbles.Add(i);
         }
 
-        public static void addContinuesUpdateAble(IContinuesUpdateAble i)
+        public static void AddContinuesUpdateAble(IContinuesUpdateAble i)
         {
             if (!instance.continuesUpdateables.Contains(i))
                 instance.continuesUpdateables.Add(i);
         }
 
-        public static void removeUpdateAble(IUpdatable i)
+        public static void RemoveUpdateAble(IUpdatable i)
         {
             if (instance.updateAbles.Contains(i))
                 instance.updateAbles.Remove(i);
         }
 
-        public static void removeContinuesUpdateAble(IContinuesUpdateAble i)
+        public static void RemoveContinuesUpdateAble(IContinuesUpdateAble i)
         {
             if (instance.continuesUpdateables.Contains(i))
                 instance.continuesUpdateables.Remove(i);
