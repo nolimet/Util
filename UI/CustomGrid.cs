@@ -4,8 +4,8 @@ using UnityEngine;
 namespace Util.UI
 {
     /// <summary>
-    ///  A grid sorting method that has the abilty create simple soothend animations.
-    ///  It also only does things when it detects changes making it quite light;
+    /// A grid sorting method that has the abilty create simple soothend animations. It also only
+    /// does things when it detects changes making it quite light;
     /// </summary>
     public class CustomGrid : MonoBehaviour
     {
@@ -39,13 +39,18 @@ namespace Util.UI
         /// The maxium number of rows
         /// </summary>
         [Range(1, 500)] //can ve changed to anynumber above 0
-        public int maxRows = 2;
+        public int maxColumns = 1;
+
+        /// <summary>
+        /// Start placing objects on the leftside
+        /// </summary>
+        public bool StartLeft = true;
 
         /// <summary>
         /// The minum objecs on a single row needed before it creates a second row
         /// </summary>
         [Range(1, 500)]
-        public int minNeededForFirstRow = 2;
+        public int minNeededToStartSecondRow = 1;
 
         /// <summary>
         /// The y offset used for when the objects are not well centered them selfs
@@ -54,10 +59,13 @@ namespace Util.UI
         public float yoffset;
 
         /// <summary>
-        /// Does the grid update continuesly. usefull when debugging the grid or seeing if everything works correctly.
-        /// Recommened to have it turned of when you are building the game because it saves preformance
+        /// Does the grid update continuesly. usefull when debugging the grid or seeing if everything
+        /// works correctly. Recommened to have it turned of when you are building the game because
+        /// it saves preformance
         /// </summary>
         public bool continuesUpdates = false;
+
+        public bool autoFitMaxOnRow = true;
 
         /// <summary>
         /// Enable the animations so that the elements move towards the new points instead of teleporting
@@ -98,6 +106,21 @@ namespace Util.UI
 
         private RectTransform t;
 
+        public int CurrentRows
+        {
+            get; private set;
+        }
+
+        public Vector2 RecommendedSize
+        {
+            get; private set;
+        }
+
+        public void ForceUpdate()
+        {
+            OnEnable();
+        }
+
         private void Start()
         {
             t = (RectTransform)transform;
@@ -107,15 +130,16 @@ namespace Util.UI
 
         private void OnEnable()
         {
-            setChildPosition();
-            setChildSize();
+            if (autoFitMaxOnRow)
+            {
+                CalcMaxRow();
+            }
+            SetChildPosition();
+            PostProcessPositions();
+            SetChildSize();
             SnapToPos();
-            atNewPos = false;
-        }
 
-        public void ForceUpdate()
-        {
-            OnEnable();
+            atNewPos = false;
         }
 
         private void Awake()
@@ -125,22 +149,35 @@ namespace Util.UI
 
         private void Update()
         {
-            if (childCountLast != getChildCount())
+            if (!enabled)
             {
-                setChildSize();
-                setChildPosition();
-                childCountLast = getChildCount();
+                return;
+            }
+
+            if (childCountLast != GetChildCount())
+            {
+                if (autoFitMaxOnRow)
+                {
+                    CalcMaxRow();
+                }
+                SetChildSize();
+                SetChildPosition();
+                PostProcessPositions();
+                childCountLast = GetChildCount();
             }
             else if (atNewPos && continuesUpdates)
             {
-                setChildSize();
-                setChildPosition();
+                SetChildSize();
+                SetChildPosition();
+                PostProcessPositions();
                 SnapToPos();
             }
             if (!atNewPos)
             {
                 if ((Time.time - StartTime) * 4f <= 1f && useAnimations)
+                {
                     MoveObjectsToPos();
+                }
                 else
                 {
                     atNewPos = true;
@@ -149,7 +186,7 @@ namespace Util.UI
             }
         }
 
-        private void setChildSize()
+        private void SetChildSize()
         {
             RectTransform child;
             for (int i = 0; i < transform.childCount; i++)
@@ -164,8 +201,13 @@ namespace Util.UI
             }
         }
 
-        private void setChildPosition()
+        private void SetChildPosition()
         {
+            if (transform.childCount == 0)
+            {
+                return;
+            }
+
             StartTime = Time.time;
             atNewPos = false;
             startPos.Clear();
@@ -173,48 +215,68 @@ namespace Util.UI
             ActiveChildren.Clear();
 
             if (!t)
+            {
                 t = (RectTransform)transform;
+            }
 
             Rect WH = t.rect;
-            int noOfChilds = getChildCount();
+            int noOfChilds = GetChildCount();
             float spacingY, spacingX;
+            RectTransform Child;
+            float indexLocal = 0;
+            float z = 0;
+            int column = 0;
+            Vector2 pos = Vector2.zero;
 
             ///calculate HorizontalSpace
             if (noOfChilds == 1)
+            {
                 spacingY = 0;
-            else if (noOfChilds > minNeededForFirstRow) //diffrence less than 3 and 3 is special alignment
-                spacingY = WH.height - ((Mathf.CeilToInt(noOfChilds / (float)maxRows)) * ObjSize.y);
+            }
+            else if (noOfChilds >= minNeededToStartSecondRow) //diffrence less than 3 and 3 is special alignment
+            {
+                spacingY = WH.height - ((Mathf.CeilToInt(noOfChilds / (float)maxColumns)) * ObjSize.y);
+            }
             else
+            {
                 spacingY = WH.height - (ObjSize.y * noOfChilds);
+            }
 
-            if (noOfChilds < minNeededForFirstRow)
+            if (noOfChilds < minNeededToStartSecondRow)
+            {
                 spacingX = 0;
+            }
             else
-                spacingX = WH.width - (maxRows * ObjSize.x);
+            {
+                spacingX = WH.width - (maxColumns * ObjSize.x);
+            }
 
-            spacingX /= maxRows;
-            spacingY /= Mathf.CeilToInt(noOfChilds / (float)maxRows);
+            spacingX /= maxColumns;
+            spacingY /= Mathf.CeilToInt(noOfChilds / (float)maxColumns);
 
             if (spacingX < 0)
+            {
                 spacingX = 0;
-            if (spacingY < 0)
-                spacingY = 0;
-            if (spacingY > maxSpacing.y)
-                spacingY = maxSpacing.y;
-            if (spacingX > maxSpacing.x)
-                spacingX = maxSpacing.x;
+            }
 
+            if (spacingY < 0)
+            {
+                spacingY = 0;
+            }
+
+            if (spacingY > maxSpacing.y)
+            {
+                spacingY = maxSpacing.y;
+            }
+
+            if (spacingX > maxSpacing.x)
+            {
+                spacingX = maxSpacing.x;
+            }
+            z = (spacingX + ObjSize.x);
             CurrentSpacing = new Vector2(spacingX, spacingY);
             spacingX += padding.x;
             spacingY += padding.y;
-
-            RectTransform Child;
-            float indexLocal = 0, OrigenX = 0;
-            float z = (spacingX + ObjSize.x);
-            int row = 0;
-            int totalCollums = Mathf.CeilToInt(noOfChilds / (float)maxRows);
-            int rowSize = 0;
-            Vector2 pos = Vector2.zero;
 
             for (int i = 0; i < noOfChilds; i++)
             {
@@ -222,21 +284,23 @@ namespace Util.UI
 
                 if (!onlyUseActiveObjects || onlyUseActiveObjects && Child.gameObject.activeSelf)
                 {
-                    if (i % maxRows == 0)
+                    if (i % maxColumns == 0)
                     {
-                        if ((i + 1) / maxRows < totalCollums - 1)
-                            row = maxRows;
-                        else
-                            rowSize = row = noOfChilds - i;
+                        column = StartLeft ? 1 : maxColumns;
                     }
 
-                    if (noOfChilds <= minNeededForFirstRow)
+                    if (noOfChilds <= minNeededToStartSecondRow)
                     {
                         indexLocal = (noOfChilds / 2 - i);
                         if (noOfChilds == 2)
+                        {
                             indexLocal -= 0.5f;
+                        }
+
                         if (noOfChilds == 0)
+                        {
                             indexLocal = 0;
+                        }
 
                         pos = new Vector2(0f, indexLocal * (spacingY + ObjSize.y));
                     }
@@ -244,31 +308,24 @@ namespace Util.UI
                     {
                         if (AnchorPoint.y < 1)
                         {
-                            indexLocal = ((noOfChilds / maxRows) / 2f) - (i / maxRows);
+                            indexLocal = ((noOfChilds / maxColumns) / 2f) - (i / maxColumns);
                         }
                         else
                         {
-                            indexLocal = (-i / maxRows);
+                            indexLocal = (-i / maxColumns);
                             // Debug.Log(indexLocal);
                         }
 
-                        if (noOfChilds % maxRows == 0)
+                        if (noOfChilds % maxColumns == 0)
+                        {
                             indexLocal -= yoffset;
+                        }
 
                         pos = new Vector2(0f, indexLocal * (spacingY + ObjSize.y));
 
-                        if (maxRows > 1)
+                        if (maxColumns > 1)
                         {
-                            if ((i + 1) / maxRows < totalCollums - 1)
-                            {
-                                OrigenX = (z * (maxRows + 1)) / 2f;
-                            }
-                            else if (row == rowSize)
-                            {
-                                OrigenX = (z * (rowSize + 1)) / 2f;
-                            }
-
-                            pos.x = (-z * row) + OrigenX;
+                            pos.x = (z * column) - spacingX - (ObjSize.x * (1 - t.pivot.x));
                         }
                         else
                         {
@@ -277,12 +334,41 @@ namespace Util.UI
                     }
                     pos.x = Mathf.Ceil(pos.x);
                     pos.y = Mathf.Ceil(pos.y);
-
                     startPos.Add(Child.anchoredPosition);
                     newPos.Add(pos);
 
-                    row--;
+                    column += StartLeft ? 1 : -1;
                 }
+            }
+            CurrentRows = Mathf.CeilToInt(noOfChilds / (float)maxColumns);
+        }
+
+        private void PostProcessPositions()
+        {
+            if (newPos.Count <= 1 || transform.childCount == 0 || newPos.Count != transform.childCount)
+            {
+                return;
+            }
+
+            float f = padding.x + CurrentSpacing.x;
+            float d = ObjSize.x + f;
+            f *= AnchorPoint.x;
+            d *= AnchorPoint.x;
+
+            Dictionary<float, int> rowLength = new Dictionary<float, int>();
+            foreach (Vector2 v in newPos)
+            {
+                if (!rowLength.ContainsKey(v.y))
+                {
+                    rowLength.Add(v.y, 0);
+                }
+                rowLength[v.y]++;
+            }
+            float OffsetX = 0;
+            for (int i = 0; i < newPos.Count; i++)
+            {
+                OffsetX = (1 - ((RectTransform)transform.GetChild(i)).pivot.x) * ObjSize.x;
+                newPos[i] = new Vector2(newPos[i].x - (d * rowLength[newPos[i].y] - f) - (rowLength[newPos[i].y] != maxColumns ? padding.x : 0) - OffsetX, newPos[i].y);
             }
         }
 
@@ -305,21 +391,26 @@ namespace Util.UI
 
         private void SnapToPos()
         {
-            RectTransform child;
-            for (int i = 0; i < ActiveChildren.Count; i++)
+            if (transform.childCount != 0)
             {
-                child = ActiveChildren[i];
-                child.anchoredPosition = newPos[i];
+                RectTransform child;
+                for (int i = 0; i < ActiveChildren.Count; i++)
+                {
+                    child = ActiveChildren[i];
+                    child.anchoredPosition = newPos[i];
+                }
             }
         }
 
-        private int getChildCount()
+        private int GetChildCount()
         {
             ActiveChildren.Clear();
             for (int i = 0; i < t.childCount; i++)
             {
                 if (!onlyUseActiveObjects || onlyUseActiveObjects && t.GetChild(i).gameObject.activeSelf)
+                {
                     ActiveChildren.Add((RectTransform)t.GetChild(i));
+                }
             }
 
             if (onlyUseActiveObjects)
@@ -328,12 +419,27 @@ namespace Util.UI
                 for (int i = 0; i < t.childCount; i++)
                 {
                     if (t.GetChild(i).gameObject.activeSelf)
+                    {
                         r++;
+                    }
                 }
 
                 return r;
             }
             return t.childCount;
+        }
+
+        private void CalcMaxRow()
+        {
+            float width = ((RectTransform)transform).rect.size.x;
+            float totalElementWidth = ObjSize.x + padding.x;
+
+            maxColumns = Mathf.FloorToInt(width / totalElementWidth);
+
+            if (maxColumns == 0)
+            {
+                maxColumns = 1;
+            }
         }
     }
 }
