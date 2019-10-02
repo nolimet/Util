@@ -1,0 +1,80 @@
+using UnityEditor;
+using UnityEditor.Build.Reporting;
+using UnityEngine;
+
+public static class BuildCommands
+{
+    [MenuItem("File/Build App &b")]
+    public static void BuildAppAuto()
+    {
+        const string CustomBuildPathKey = "CustomBuildPath";
+
+        string path = EditorPrefs.GetString(CustomBuildPathKey, "");
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            path = EditorUtility.SaveFolderPanel("Choose location of Build artifact", path, "");
+        }
+
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return;
+        }
+        EditorPrefs.SetString("CustomBuildPath", path);
+        path = FormatBuildName(path);
+
+        var buildTarget = EditorUserBuildSettings.activeBuildTarget;
+        BuildReport report = BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, path, buildTarget, BuildOptions.AutoRunPlayer);
+
+        ProcessReport(report);
+    }
+
+    [MenuItem("File/Build App Select Path")]
+    public static void BuildApp()
+    {
+        const string CustomBuildPathKey = "CustomBuildPath";
+
+        string path = EditorUtility.SaveFolderPanel("Choose location of Build artifact", EditorPrefs.GetString(CustomBuildPathKey, ""), "");
+        if (string.IsNullOrEmpty(path))
+            return;
+        EditorPrefs.SetString("CustomBuildPath", path);
+        path = FormatBuildName(path);
+
+        var buildTarget = EditorUserBuildSettings.activeBuildTarget;
+        BuildReport report = BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, path, buildTarget, BuildOptions.AutoRunPlayer);
+
+        ProcessReport(report);
+    }
+
+    [MenuItem("File/Build Development App")]
+    public static void BuildDevelopmentBuild()
+    {
+        const string CustomBuildPathKey = "CustomBuildPath";
+
+        string path = EditorUtility.SaveFolderPanel("Choose location of Build Development artifact", EditorPrefs.GetString(CustomBuildPathKey, ""), "");
+        if (string.IsNullOrEmpty(path))
+            return;
+        EditorPrefs.SetString("CustomBuildPath", path);
+        path = FormatBuildName(path);
+
+        var buildTarget = EditorUserBuildSettings.activeBuildTarget;
+        BuildReport report = BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, path, buildTarget, BuildOptions.AutoRunPlayer | BuildOptions.Development | BuildOptions.ConnectWithProfiler | BuildOptions.AllowDebugging);
+
+        ProcessReport(report);
+    }
+
+    private static string FormatBuildName(string path) => $"{path}/[{PlayerSettings.productName}_{PlayerSettings.companyName}]_{System.DateTime.Now.Date.ToString("dd-MM-yyyy")}_{PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup)}.apk";
+    private static void ProcessReport(BuildReport report)
+    {
+        BuildSummary summary = report.summary;
+        if (summary.result == BuildResult.Succeeded)
+        {
+            Debug.Log("Build succeeded: " + (summary.totalSize / (1024 ^ 2)) + " MiB");
+            Debug.Log("Build took: " + summary.totalTime.ToString());
+        }
+
+        if (summary.result == BuildResult.Failed)
+        {
+            Debug.Log("Build failed");
+        }
+    }
+}
