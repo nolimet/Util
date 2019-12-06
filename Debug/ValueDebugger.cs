@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+//Auther Jesse D. Stam
+//License - MIT License
+//Source 
+
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,18 +10,131 @@ using UnityEngine.UI;
 namespace Util.Debugger
 {
     /// <summary>
+    /// On screen debugger call class
+    /// </summary>
+    public static class Debugger
+    {
+        public static bool DebugEnabled = true;
+        public static bool LogToConsole = false;
+
+        /// <summary>
+        /// Value that will be logged. Also create the object that will be rendered onscreen
+        /// completely by code so it does not need a prefab
+        /// </summary>
+        /// <param name="name">Value's name so you can find it back</param>
+        /// <param name="value">Value of the object</param>
+        public static void Log(string name, object value)
+        {
+            if (DebugEnabled)
+            {
+                ValueDebugger.ValueLog(name, value);
+            }
+        }
+
+        public static T QuickLog<T>(this T value, string name)
+        {
+            if (DebugEnabled)
+            {
+                ValueDebugger.ValueLog(name, value);
+            }
+
+            if (LogToConsole)
+            {
+                QuickCLog(value, name);
+            }
+
+            return value;
+        }
+
+        public static T QuickLog<T>(this T value, string name, Color nameColor)
+        {
+            if (DebugEnabled)
+            {
+                ValueDebugger.ValueLog(name.QuickColor(nameColor), value);
+            }
+
+            if (LogToConsole)
+            {
+                QuickCLog(value, name, nameColor);
+            }
+
+            return value;
+        }
+
+        public static T QuickLog<T>(this T value, Color valueColor, string name, Color nameColor)
+        {
+            if (DebugEnabled)
+            {
+                ValueDebugger.ValueLog(name.QuickColor(nameColor), value.ToString().QuickColor(valueColor));
+            }
+
+            if (LogToConsole)
+            {
+                QuickCLog(value, valueColor, name, nameColor);
+            }
+
+            return value;
+        }
+
+        public static T QuickLog<T>(this T value, Color valueColor, string name)
+        {
+            if (DebugEnabled)
+            {
+                ValueDebugger.ValueLog(name, value);
+            }
+
+            if (LogToConsole)
+            {
+                QuickCLog(value, valueColor, name);
+            }
+
+            return value;
+        }
+
+        public static T QuickCLog<T>(this T value, string name)
+        {
+            Debug.Log($"{name} - {value}");
+            return value;
+        }
+
+        public static T QuickCLog<T>(this T value, string name, Color nameColor)
+        {
+            Debug.Log($"{name.QuickColor(nameColor)} - {value}");
+            return value;
+        }
+
+        public static T QuickCLog<T>(this T value, Color valueColor, string name, Color nameColor)
+        {
+            Debug.Log($"{name.QuickColor(nameColor)} - {value.ToString().QuickColor(valueColor)}");
+            return value;
+        }
+
+        public static T QuickCLog<T>(this T value, Color valueColor, string name)
+        {
+            Debug.Log($"{name} - {value.ToString().QuickColor(valueColor)}");
+            return value;
+        }
+
+        public static string QuickColor(this string value, Color color)
+        {
+            const string colorFormat = "<color=#{0}>{1}</color>";
+            return string.Format(colorFormat, ColorUtility.ToHtmlStringRGB(color), value);
+        }
+    }
+
+    /// <summary>
     /// On screen debugger usefull when working with a game build but you want to do some error tracking
     /// </summary>
     public class ValueDebugger : MonoBehaviour
     {
-        private static ValueDebugger instance;
-
         protected Dictionary<string, object> Values;
         protected Text t;
+        private static ValueDebugger instance;
+        private string ts;
 
         /// <summary>
-        /// Value that will be logged.
-        /// Also create the object that will be rendered onscreen completely by code so it does not need a prefab
+        /// Value that will be logged. Also create the object that will be rendered onscreen
+        /// completely by code so it does not need a prefab
         /// </summary>
         /// <param name="name">Value's name so you can find it back</param>
         /// <param name="value">Value of the object</param>
@@ -42,6 +159,7 @@ namespace Util.Debugger
                 CanvasScaler sc = g.AddComponent<CanvasScaler>();
                 sc.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 sc.referenceResolution = new Vector2(1600, 900);
+                sc.matchWidthOrHeight = 1;
 
                 //text Display
                 GameObject g2 = new GameObject();
@@ -79,7 +197,9 @@ namespace Util.Debugger
             }
 
             if (instance && !instance.transform.parent.gameObject.activeSelf)
+            {
                 instance.transform.parent.gameObject.SetActive(true);
+            }
 
             if (instance.Values.Keys.Contains(name))
             {
@@ -101,7 +221,9 @@ namespace Util.Debugger
         private void Update()
         {
             if (!Debugger.DebugEnabled)
+            {
                 transform.parent.gameObject.SetActive(false);
+            }
 
             Process();
         }
@@ -110,8 +232,6 @@ namespace Util.Debugger
         {
             instance = null;
         }
-
-        private string ts;
 
         /// <summary>
         /// create the string that will be displayed on screen
@@ -126,32 +246,6 @@ namespace Util.Debugger
             }
 
             t.text = ts;
-        }
-    }
-
-    /// <summary>
-    /// On screen debugger call class
-    /// </summary>
-    public static class Debugger
-    {
-        public static bool DebugEnabled = true;
-
-        /// <summary>
-        /// Value that will be logged.
-        /// Also create the object that will be rendered onscreen completely by code so it does not need a prefab
-        /// </summary>
-        /// <param name="name">Value's name so you can find it back</param>
-        /// <param name="value">Value of the object</param>
-        public static void Log(string name, object value)
-        {
-            if (DebugEnabled)
-                ValueDebugger.ValueLog(name, value);
-        }
-
-        public static void QuickLog<T>(this T value, string name)
-        {
-            if (DebugEnabled)
-                ValueDebugger.ValueLog(name, value);
         }
     }
 }
