@@ -1,6 +1,6 @@
 //Auther Jesse D. Stam
 //License - MIT License
-//Source 
+//Source https://github.com/nolimet/Util/blob/master/Debug/ValueDebugger.cs
 
 using System.Collections.Generic;
 using System.Linq;
