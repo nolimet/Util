@@ -199,7 +199,7 @@ public static class BuildCommands
         EditorPrefs.SetString($"{CustomBuildPathKey}-{projectname}", path);
         return path;
 
-        static string GetProjectName()
+        string GetProjectName()
         {
             string[] s = Application.dataPath.Split('/');
             string projectName = s[s.Length - 2];
