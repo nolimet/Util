@@ -31,6 +31,8 @@ public static class BuildCommands
 
         path = FormatBuildName(path);
 
+        PreProcess();
+
         var buildTarget = EditorUserBuildSettings.activeBuildTarget;
         BuildReport report = BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, path, buildTarget, autoRun ? BuildOptions.AutoRunPlayer : BuildOptions.None);
 
@@ -53,6 +55,8 @@ public static class BuildCommands
 #endif
         CleanupOldSymbols(path);
         path = FormatBuildName(path);
+
+        PreProcess();
 
         var buildTarget = EditorUserBuildSettings.activeBuildTarget;
         BuildReport report = BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, path, buildTarget, autoRun ? BuildOptions.AutoRunPlayer : BuildOptions.None);
@@ -77,8 +81,9 @@ public static class BuildCommands
         CleanupOldSymbols(path);
         path = FormatBuildName(path);
 
-        var buildTarget = EditorUserBuildSettings.activeBuildTarget;
+        PreProcess();
 
+        var buildTarget = EditorUserBuildSettings.activeBuildTarget;
         BuildOptions options = autoRun ?
             BuildOptions.AutoRunPlayer | BuildOptions.Development | BuildOptions.ConnectWithProfiler | BuildOptions.AllowDebugging :
             BuildOptions.Development | BuildOptions.ConnectWithProfiler | BuildOptions.AllowDebugging;
@@ -206,6 +211,11 @@ public static class BuildCommands
             Debug.Log("project = " + projectName);
             return projectName;
         }
+    }
+
+    private static void PreProcess()
+    {
+        PlayerSettings.Android.bundleVersionCode++;
     }
 
     #region Firebase
