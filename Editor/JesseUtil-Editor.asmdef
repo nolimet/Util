@@ -1,0 +1,17 @@
+{
+    "name": "JesseUtil-Editor",
+    "references": [
+        "GUID:5047957896736584393fa6bcfb98b448"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
