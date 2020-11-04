@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Util
+namespace NoUtil.Particle
 {
     public static class ParticleSystemExtension
     {

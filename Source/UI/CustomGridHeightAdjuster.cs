@@ -2,7 +2,7 @@ using UnityEngine;
 
 //using UnityEngine.UI;
 
-namespace Util.UI
+namespace NoUtil.UI
 {
     [RequireComponent(typeof(CustomGrid), typeof(RectTransform))]
     public class CustomGridHeightAdjuster : MonoBehaviour//, ILayoutElement

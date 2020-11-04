@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace Util.Debugger
+namespace NoUtil.Debugging
 {
     public class CompactLog : MonoBehaviour
     {

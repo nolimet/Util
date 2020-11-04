@@ -6,7 +6,7 @@ using UnityEditor;
 
 #endif
 
-namespace Util
+namespace NoUtil
 {
     public class ReadOnlyAttribute : PropertyAttribute
     {

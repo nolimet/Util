@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Util
+namespace NoUtil
 {
     public class _3DRayShooter : MonoBehaviour
     {

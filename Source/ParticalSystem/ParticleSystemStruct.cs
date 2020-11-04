@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Util
+namespace NoUtil.Particle
 {
     /// <summary>
     /// Struct for particle sytems so i don't have to repeat much code

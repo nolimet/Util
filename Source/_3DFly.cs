@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Util
+namespace NoUtil
 {
     [AddComponentMenu("Camera-Control/3DFly")]
     [RequireComponent(typeof(MouseLook))]

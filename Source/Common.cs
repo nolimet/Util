@@ -5,7 +5,7 @@ using UnityEngine;
 /// Util libary
 /// Contains a quite a few usefull things like a serialization module, A event system and some hacks for the UI system
 /// </summary>
-namespace Util
+namespace NoUtil
 {
     /// <summary>
     /// Common Utily libary. It contains fuctions that I used regulary or where very hard to figure out.

@@ -2,7 +2,7 @@
 using System.Xml.Serialization;
 using UnityEngine;
 
-namespace Util.XML
+namespace NoUtil.XML
 {
     [XmlRoot("WaveData"), System.Serializable]
     public class DataContainer

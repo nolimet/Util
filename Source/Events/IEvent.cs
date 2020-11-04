@@ -1,4 +1,4 @@
-﻿namespace Util.Events
+﻿namespace NoUtil.Events
 {
     /// <summary>
     /// The base interface for Events.

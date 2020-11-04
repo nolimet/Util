@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Util.UI
+namespace NoUtil.UI
 {
     public class DragableObject : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
     {

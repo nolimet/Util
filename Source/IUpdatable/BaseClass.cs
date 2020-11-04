@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Util.Update
+namespace NoUtil.Update
 {
     public class BaseClass : MonoBehaviour, IUpdatable
     {
