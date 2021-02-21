@@ -1,7 +1,8 @@
 {
-    "name": "JesseUtil-Editor",
+    "name": "NoUtil-Editor",
     "references": [
-        "GUID:5047957896736584393fa6bcfb98b448"
+        "NoUtil",
+        "AsyncAwaitUtil"
     ],
     "includePlatforms": [
         "Editor"
