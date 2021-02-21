@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEngine;
+using NoUtil.Async.Internal;
 using System;
-using System.Linq;
+using UnityEngine;
 
 public static class AsyncAwaiters
 {
@@ -13,23 +10,13 @@ public static class AsyncAwaiters
 
     public static WaitForEndOfFrame EndOfFrame { get; } = new WaitForEndOfFrame();
 
-    public static WaitForSeconds Seconds(float seconds)
-    {
-        return new WaitForSeconds(seconds);
-    }
+    public static WaitForBackgroundThread BackgroundThread => new WaitForBackgroundThread();
 
-    public static WaitForSecondsRealtime SecondsRealtime(float seconds)
-    {
-        return new WaitForSecondsRealtime(seconds);
-    }
+    public static WaitForSeconds Seconds(float seconds) => new WaitForSeconds(seconds);
 
-    public static WaitUntil Until(Func<bool> predicate)
-    {
-        return new WaitUntil(predicate);
-    }
+    public static WaitForSecondsRealtime SecondsRealtime(float seconds) => new WaitForSecondsRealtime(seconds);
 
-    public static WaitWhile While(Func<bool> predicate)
-    {
-        return new WaitWhile(predicate);
-    }
+    public static WaitUntil Until(Func<bool> predicate) => new WaitUntil(predicate);
+
+    public static WaitWhile While(Func<bool> predicate) => new WaitWhile(predicate);
 }

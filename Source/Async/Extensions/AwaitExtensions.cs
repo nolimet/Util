@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Diagnostics;
+using System.Threading.Tasks;
 
 public static class AwaitExtensions
 {
