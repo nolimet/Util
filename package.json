@@ -1,6 +1,6 @@
 {
     "name": "nl.jessestam.no-util",
-    "version": "1.0.6b",
+    "version": "1.0.6",
     "displayName": "NoUtil",
     "description": "A utility libary with many tools to speed up development",
     "unity": "2019.4",
@@ -11,18 +11,6 @@
         "jillejr.newtonsoft.json-for-unity": "https://github.com/jilleJr/Newtonsoft.Json-for-Unity.git#12.0.302",
         "jillejr.newtonsoft.json-for-unity.converters": "https://github.com/jilleJr/Newtonsoft.Json-for-Unity.Converters.git#1.1.0-preview.2"
     },
-    "scopedRegistries": [
-        {
-            "name": "package.openupm.com",
-            "url": "https://package.openupm.com",
-            "scopes": [
-                "com.openupm",
-                "com.svermeulen.extenject",
-                "jillejr.newtonsoft.json-for-unity",
-                "jillejr.newtonsoft.json-for-unity.converters"
-            ]
-        }
-    ],
     "author": {
         "name": "Jesse Stam",
         "email": "jesse@jessestam.nl",
