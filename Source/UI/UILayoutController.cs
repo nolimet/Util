@@ -34,7 +34,7 @@ namespace NoUtil.UI
             tokenSource = new CancellationTokenSource();
             if (newLayoutRoot && layoutGroups.Any(x => x.LayoutRoot == newLayoutRoot))
             {
-                ChangeLayoutAsync(newLayoutRoot, tokenSource.Token).WrapErrors();
+                ChangeLayoutAsync(newLayoutRoot, tokenSource.Token).ExcecuteTask();
             }
         }
 
@@ -62,7 +62,7 @@ namespace NoUtil.UI
                         return TaskCheck(changeTaskNewLayout) || TaskCheck(changeTaskActiveLayout);
                     }
 
-                    await new WaitForUpdate();
+                    await AsyncAwaiters.NextFrame;
                     if (TaskCheck(changeTaskNewLayout))
                         changeTaskNewLayout.Dispose();
                     if (TaskCheck(changeTaskActiveLayout))
@@ -122,7 +122,7 @@ namespace NoUtil.UI
                     while (Mathf.Abs(canvasGroup.alpha - targetAlpha) >= float.Epsilon)
                     {
                         canvasGroup.alpha = Mathf.MoveTowards(canvasGroup.alpha, targetAlpha, maxDelta * Time.deltaTime);
-                        await new WaitForUpdate();
+                        await AsyncAwaiters.NextFrame;
                         token.ThrowIfCancellationRequested();
                     }
 
