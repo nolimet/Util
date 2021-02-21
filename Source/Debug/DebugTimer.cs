@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Util.Debugger
+namespace NoUtil.Debugging
 {
     public static class DebugTime
     {

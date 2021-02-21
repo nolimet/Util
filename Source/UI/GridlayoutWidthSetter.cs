@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Util.UI
+namespace NoUtil.UI
 {
     public class GridlayoutWidthSetter : MonoBehaviour
     {
@@ -44,14 +44,14 @@ namespace Util.UI
                 if (!c)
                     rt.sizeDelta = new Vector2(rt.sizeDelta.x, (cellSize.y + spacing.y) * ChildrenCount);
                 else
-                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, (c.ObjSize.y + (c.padding.y + c.CurrentSpacing.y)) * Mathf.CeilToInt(ChildrenCount / (float)c.maxRows));
+                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, (c.ObjSize.y + (c.padding.y + c.CurrentSpacing.y)) * Mathf.CeilToInt(ChildrenCount / (float)c.maxColumns));
             }
             else
             {
                 if (!c)
                     rt.sizeDelta = new Vector2(rt.sizeDelta.x, (cellSize.y + spacing.y) * ChildrenNeededToScroll);
                 else
-                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, (c.ObjSize.y + (c.padding.y + c.CurrentSpacing.y)) * (ChildrenNeededToScroll / c.maxRows));
+                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, (c.ObjSize.y + (c.padding.y + c.CurrentSpacing.y)) * (ChildrenNeededToScroll / c.maxColumns));
             }
         }
 

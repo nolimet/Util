@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace Util
+namespace NoUtil
 {
     [Serializable, AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public class LayerDropdownAttribute : PropertyAttribute

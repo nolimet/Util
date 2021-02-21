@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Util.Debugger
+namespace NoUtil.Debugging
 {
     public class DebugGrid : MonoBehaviour
     {

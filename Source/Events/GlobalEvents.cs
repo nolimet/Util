@@ -1,6 +1,6 @@
 using System;
 
-namespace Util.Events
+namespace NoUtil.Events
 {
     /// <summary>
     /// Use this for global event handling.

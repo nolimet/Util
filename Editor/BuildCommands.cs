@@ -8,11 +8,11 @@ using UnityEngine;
 
 public static class BuildCommands
 {
-    const ulong kebiByte = 1024;
-    const ulong mebibyte = kebiByte * kebiByte;
-    const string CustomBuildPathKey = "CustomBuildPath";
-    const string CleanUpBuildsKey = "CleanUpBuildsAuto";
-    const int maxBuildsPerDay = 4;
+    private const ulong kebiByte = 1024;
+    private const ulong mebibyte = kebiByte * kebiByte;
+    private const string CustomBuildPathKey = "CustomBuildPath";
+    private const string CleanUpBuildsKey = "CleanUpBuildsAuto";
+    private const int maxBuildsPerDay = 4;
 
     [MenuItem("File/Build App &b")]
     public static void BuildAppAuto()
@@ -93,12 +93,13 @@ public static class BuildCommands
         ProcessReport(report);
         CleanupBuilds(false);
     }
+
     [MenuItem("File/Set Build Path")]
     public static void ChangeBuildPath() => SetBuildPath(true);
 
     private static string FormatBuildName(string path)
     {
-        path =  $"{path}/[{PlayerSettings.productName}_{PlayerSettings.companyName}]_{{{System.DateTime.Now.ToString("dd-MM-yyyy_HH-mm") }}}_{PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup)}";
+        path = $"{path}/[{PlayerSettings.productName}_{PlayerSettings.companyName}]_{{{System.DateTime.Now.ToString("dd-MM-yyyy_HH-mm") }}}_{PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup)}";
         var buildTarget = EditorUserBuildSettings.activeBuildTarget;
         switch (buildTarget)
         {
@@ -157,8 +158,8 @@ public static class BuildCommands
         }
 
         DirectoryInfo directory = new DirectoryInfo(directoryPath);
-        IEnumerable<IGrouping<System.DateTime, FileInfo>> groupedFiles = directory.GetFiles("*.apk").GroupBy(x => x.CreationTime.Date).Where(g=>g.Count()> maxBuildsPerDay);
-        foreach(IGrouping<System.DateTime, FileInfo> fileGroup in groupedFiles)
+        IEnumerable<IGrouping<System.DateTime, FileInfo>> groupedFiles = directory.GetFiles("*.apk").GroupBy(x => x.CreationTime.Date).Where(g => g.Count() > maxBuildsPerDay);
+        foreach (IGrouping<System.DateTime, FileInfo> fileGroup in groupedFiles)
         {
             var orderedGroup = fileGroup.OrderBy(x => x.CreationTime).ToArray();
             for (int i = 0; i < orderedGroup.Length - 4; i++)
@@ -200,7 +201,6 @@ public static class BuildCommands
             return string.Empty;
         }
 
-
         EditorPrefs.SetString($"{CustomBuildPathKey}-{projectname}", path);
         return path;
 
@@ -219,9 +219,9 @@ public static class BuildCommands
     }
 
     #region Firebase
+
 #if Firebase_Enabled
     const string isDevelopmentBuildSaveKey = "isDevelopmentBuild";
-
 
     private static bool CheckIsDevelopmentBuild()
     {
@@ -263,5 +263,6 @@ public static class BuildCommands
     }
 
 #endif
-    #endregion
+
+    #endregion Firebase
 }

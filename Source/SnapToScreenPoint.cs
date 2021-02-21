@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Util
+namespace NoUtil
 {
     /// <summary>
     /// Snaps a Object to a position on screen

@@ -2,7 +2,7 @@
 //Created 12-2-2016
 using UnityEngine.SceneManagement;
 
-namespace Util
+namespace NoUtil
 {
     /// <summary>
     /// Controles scence changes

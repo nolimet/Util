@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Util.Events
+namespace NoUtil.Events
 {
     /// <summary>
     /// Event dispatcher class.

@@ -5,7 +5,7 @@
 using System;
 using UnityEngine;
 
-namespace Jesse.Utility.Debugging
+namespace NoUtil.Debugging
 {
     /// <summary>
     /// On screen debugger call class

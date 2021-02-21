@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Util
+namespace NoUtil
 {
     /// <summary>
     /// 3d version of Scale to ScreenSize

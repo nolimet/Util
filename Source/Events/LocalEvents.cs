@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Util.Events
+namespace NoUtil.Events
 {
     /// <summary>
     /// Use this for local event handling.

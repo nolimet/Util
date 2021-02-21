@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Util.UI
+namespace NoUtil.UI
 {
     /// <summary>
     /// A grid sorting method that has the abilty create simple soothend animations. It also only

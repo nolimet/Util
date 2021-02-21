@@ -1,4 +1,4 @@
-﻿namespace Util.Update
+﻿namespace NoUtil.Update
 {
     public interface IUpdatable
     {

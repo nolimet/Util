@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Util.UI
+namespace NoUtil.UI
 {
     public class GridLayoutHeightSetter : MonoBehaviour
     {

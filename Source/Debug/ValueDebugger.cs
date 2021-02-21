@@ -9,7 +9,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Jesse.Utility.Debugging
+namespace NoUtil.Debugging
 {
     /// <summary>
     /// On screen debugger usefull when working with a game build but you want to do some value tracking

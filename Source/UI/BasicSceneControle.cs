@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Util.UI
+namespace NoUtil.UI
 {
     /// <summary>
     /// Used in quick prototyping of buttons for the UI sytem

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Util.UI
+namespace NoUtil.UI
 {
     /// <summary>
     /// A classes that is used to create a slider for the Scrollrect thatdoes not change size

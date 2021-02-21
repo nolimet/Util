@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Util.Update
+namespace NoUtil.Update
 {
     public class UpdateManager : MonoBehaviour
     {

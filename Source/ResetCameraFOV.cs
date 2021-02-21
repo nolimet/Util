@@ -3,7 +3,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Util
+namespace NoUtil
 {
     /// <summary>
     /// Forces a reset on Edetor Camera FOV

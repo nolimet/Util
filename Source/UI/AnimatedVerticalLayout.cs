@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Util.UI
+namespace NoUtil.UI
 {
     public class AnimatedVerticalLayout : MonoBehaviour
     {
