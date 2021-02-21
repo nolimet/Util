@@ -1,0 +1,17 @@
+{
+  "name": "nl.jessestam.no-util",
+  "version": "1.0.1",
+  "displayName": "NoUtil",
+  "description": "A utility libary with many tools to speed up development",
+  "unity": "2019.4",
+  "unityRelease": "0b5",
+  "dependencies": {
+    "com.unity.some-package": "1.0.0",
+    "com.unity.other-package": "2.0.0"
+ },
+  "author": {
+    "name": "Jesse Stam",
+    "email": "jesse@jessestam.nl",
+    "url": "https://github.com/nolimet"
+  }
+}
