@@ -1,26 +1,27 @@
 {
-  "name": "nl.jessestam.no-util",
-  "version": "1.0.4",
-  "displayName": "NoUtil",
-  "description": "A utility libary with many tools to speed up development",
-  "unity": "2019.4",
-  "unityRelease": "0b5",
-  "dependencies": {
-	"com.unity.textmeshpro": "3.0.4"
- },
- "scopedRegistries": [
-    {
-      "name": "package.openupm.com",
-      "url": "https://package.openupm.com",
-      "scopes": [
-        "com.openupm",
-        "jillejr.newtonsoft.json-for-unity",
-        "jillejr.newtonsoft.json-for-unity.converters"
-      ]
+    "name": "nl.jessestam.no-util",
+    "version": "1.0.4",
+    "displayName": "NoUtil",
+    "description": "A utility libary with many tools to speed up development",
+    "unity": "2019.4",
+    "unityRelease": "0b5",
+    "dependencies": {
+        "com.unity.textmeshpro": "3.0.4"
+    },
+    "scopedRegistries": [
+        {
+            "name": "package.openupm.com",
+            "url": "https://package.openupm.com",
+            "scopes": [
+                "com.openupm",
+                "jillejr.newtonsoft.json-for-unity",
+                "jillejr.newtonsoft.json-for-unity.converters"
+            ]
+        }
+    ],
+    "author": {
+        "name": "Jesse Stam",
+        "email": "jesse@jessestam.nl",
+        "url": "https://github.com/nolimet"
     }
-  "author": {
-    "name": "Jesse Stam",
-    "email": "jesse@jessestam.nl",
-    "url": "https://github.com/nolimet"
-  }
 }
