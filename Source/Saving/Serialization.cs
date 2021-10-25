@@ -13,11 +13,13 @@ namespace NoUtil.Serial
     /// </summary>
     public static class Serialization
     {
+#if UNITY_WEBGL
         [DllImport("__Internal")]
         private static extern void SyncFiles();
 
         [DllImport("__Internal")]
         private static extern void WindowAlert(string message);
+#endif
 
         #region fileSaveSettings
 
@@ -121,9 +123,9 @@ namespace NoUtil.Serial
                 PlatformSafeMessage("Failed to Save: " + e.Message);
             }
 
-            if (Application.platform == RuntimePlatform.WebGLPlayer)
-                SyncFiles();
-
+#if UNITY_WEBGL
+            SyncFiles();
+#endif
             //Debug.Log(System.DateTime.Now + " Saved file: " + saveFile);
         }
 
@@ -198,14 +200,13 @@ namespace NoUtil.Serial
         /// <param name="message">The message that will be shown</param>
         private static void PlatformSafeMessage(string message)
         {
-            if (Application.platform == RuntimePlatform.WebGLPlayer)
-            {
+#if UNITY_WEBGL
+
                 WindowAlert(message);
-            }
-            else
-            {
-                Debug.Log(message);
-            }
+
+#endif
+
+            Debug.Log(message);
         }
     }
 }
