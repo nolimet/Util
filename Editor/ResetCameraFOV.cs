@@ -1,16 +1,13 @@
-﻿#if UNITY_EDITOR
+﻿using UnityEditor;
 
-using UnityEditor;
-using UnityEngine;
-
-namespace NoUtil
+namespace NoUtil.Editor
 {
     /// <summary>
     /// Forces a reset on Edetor Camera FOV
     /// </summary>
-    public class ResetCameraFOV : ScriptableObject
+    public static class ResetCameraFOV
     {
-        [MenuItem("ToolBar/Camera/ResetNearClipPlane")]
+        [MenuItem("NoUtil/Camera/ResetNearClipPlane")]
         private static void ResetNearClipPlane()
         {
             //SceneView.lastActiveSceneView.camera.fieldOfView = 0.1f;
@@ -20,5 +17,3 @@ namespace NoUtil
         }
     }
 }
-
-#endif
