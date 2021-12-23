@@ -1,21 +1,39 @@
 using UnityEngine;
 using System.Collections;
 
-namespace Utils.Math
+namespace NoUtil.Math
 {
     public static partial class Math
     {
-
-        //linePnt - point the line passes through
-        //lineDir - unit vector in direction of line, either direction works
-        //pnt - the point to find nearest on line for
-        //Source https://forum.unity.com/threads/how-do-i-find-the-closest-point-on-a-line.340058/
-        public static Vector3 NearestPointOnLine(Vector3 linePnt, Vector3 lineDir, Vector3 pnt)
+        public static float CalculateJumpVerticalSpeed(float targetJumpHeight)
         {
-            lineDir.Normalize();//this needs to be a unit vector
-            var v = pnt - linePnt;
-            var d = Vector3.Dot(v, lineDir);
-            return linePnt + lineDir * d;
+            // From the jump height and gravity we deduce the upwards speed
+            // for the character to reach at the apex.
+            Debug.Log(2f * targetJumpHeight * Physics2D.gravity.y);
+            return Mathf.Sqrt(2f * targetJumpHeight * Physics2D.gravity.y);
+        }
+
+        /// <summary>
+        /// breaks up a number into pieces and return the value at the point of the power
+        /// </summary>
+        /// <param name="number">should not be seen. The number to exstract from</param>
+        /// <param name="power">wat what point do i need to take the return number. In powers of 10( 3, 2 ,1 ,0 )</param>
+        /// <returns>a number from 0-9</returns>
+        public static int GetNumbAt(this int number, int power)
+        {
+            return number / (int)Mathf.Pow(10, power) % 10;
+        }
+
+        /// <summary>
+        /// Coverts bool into a int
+        /// </summary>
+        /// <param name="b">Bool that will be converted</param>
+        /// <returns>0 if false| 1 if true</returns>
+        public static int ToInt(this bool b)
+        {
+            if (b)
+                return 1;
+            return 0;
         }
     }
 }
