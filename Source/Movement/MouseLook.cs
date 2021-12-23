@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace NoUtil
+namespace NoUtil.Movement
 {
     /// MouseLook rotates the transform based on the mouse delta.
     /// Minimum and Maximum values can be used to constrain the possible rotation
@@ -18,7 +18,8 @@ namespace NoUtil
     [AddComponentMenu("Camera-Control/Mouse Look")]
     public class MouseLook : MonoBehaviour
     {
-        public enum RotationAxes { MouseXAndY = 0, MouseX = 1, MouseY = 2 }
+        public enum RotationAxes
+        { MouseXAndY = 0, MouseX = 1, MouseY = 2 }
 
         public RotationAxes axes = RotationAxes.MouseXAndY;
         public float sensitivityX = 15F;
