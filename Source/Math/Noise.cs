@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace NoUtil
+namespace NoUtil.Math
 {
     public delegate float NoiseMethod(Vector3 point, float frequency);
 
