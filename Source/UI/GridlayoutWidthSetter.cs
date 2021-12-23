@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
+using System.Linq;
 
 namespace NoUtil.UI
 {
     public class GridlayoutWidthSetter : MonoBehaviour
     {
-        private RectTransform rt;
-        private UnityEngine.UI.GridLayoutGroup g;
-        private CustomGrid c;
+        private RectTransform rectTransform;
+        private UnityEngine.UI.GridLayoutGroup gridLayoutGroup;
+        private CustomGrid customGrid;
         public int ChildrenNeededToScroll = 8;
         public bool onlySetContainerHeight = true;
         public bool onlyUseActiveChildren = true;
@@ -16,61 +17,56 @@ namespace NoUtil.UI
 
         private void Awake()
         {
-            rt = (RectTransform)transform;
+            rectTransform = (RectTransform)transform;
 
             if (GetComponent<UnityEngine.UI.GridLayoutGroup>())
             {
-                g = GetComponent<UnityEngine.UI.GridLayoutGroup>();
-                g.cellSize = new Vector2(rt.rect.width, g.cellSize.y);
-                spacing = g.spacing;
-                cellSize = g.cellSize;
+                gridLayoutGroup = GetComponent<UnityEngine.UI.GridLayoutGroup>();
+                gridLayoutGroup.cellSize = new Vector2(rectTransform.rect.width, gridLayoutGroup.cellSize.y);
+                spacing = gridLayoutGroup.spacing;
+                cellSize = gridLayoutGroup.cellSize;
             }
 
             if (GetComponent<CustomGrid>())
             {
-                c = GetComponent<CustomGrid>();
+                customGrid = GetComponent<CustomGrid>();
                 if (!onlySetContainerHeight)
-                    c.ObjSize = new Vector2(rt.rect.width, c.ObjSize.y);
-                cellSize = c.ObjSize;
-                spacing = c.maxSpacing;
+                    customGrid.ObjSize = new Vector2(rectTransform.rect.width, customGrid.ObjSize.y);
+                cellSize = customGrid.ObjSize;
+                spacing = customGrid.maxSpacing;
             }
         }
 
         public void ForceUpdate()
         {
-            ChildrenCount = activeChildCount();
+            ChildrenCount = GetActiveChildCount();
             if (ChildrenCount > ChildrenNeededToScroll)
             {
-                if (!c)
-                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, (cellSize.y + spacing.y) * ChildrenCount);
+                if (!customGrid)
+                    rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, (cellSize.y + spacing.y) * ChildrenCount);
                 else
-                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, (c.ObjSize.y + (c.padding.y + c.CurrentSpacing.y)) * Mathf.CeilToInt(ChildrenCount / (float)c.maxColumns));
+                    rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, (customGrid.ObjSize.y + (customGrid.padding.y + customGrid.CurrentSpacing.y)) * Mathf.CeilToInt(ChildrenCount / (float)customGrid.maxColumns));
             }
             else
             {
-                if (!c)
-                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, (cellSize.y + spacing.y) * ChildrenNeededToScroll);
+                if (!customGrid)
+                    rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, (cellSize.y + spacing.y) * ChildrenNeededToScroll);
                 else
-                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, (c.ObjSize.y + (c.padding.y + c.CurrentSpacing.y)) * (ChildrenNeededToScroll / c.maxColumns));
+                    rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, (customGrid.ObjSize.y + (customGrid.padding.y + customGrid.CurrentSpacing.y)) * (ChildrenNeededToScroll / customGrid.maxColumns));
             }
         }
 
         private void Update()
         {
-            ChildrenCount = activeChildCount();
+            ChildrenCount = GetActiveChildCount();
             if (childrenLast != ChildrenCount)
             {
                 ForceUpdate();
             }
         }
 
-        private int activeChildCount()
-        {
-            int r = 0;
-            foreach (Transform t in transform)
-                if (t.gameObject.activeSelf)
-                    r++;
-            return r;
-        }
+        private int GetActiveChildCount() => (from Transform transform in transform
+                                              where transform.gameObject.activeSelf
+                                              select transform).Count();
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 namespace NoUtil.UI
 {
     public class Scrolldown : MonoBehaviour
@@ -19,13 +20,14 @@ namespace NoUtil.UI
         private float bottomValue = 0;
 
         [SerializeField]
-        Button scrollDownButton;
+        private Button scrollDownButton;
 
-        bool scrollDown;
+        private bool scrollDown;
 
-        float startPosScroll;
+        private float startPosScroll;
 
         private float ScrollRectPos { get => Mathf.Round(scrollRect.verticalNormalizedPosition * 10000) / 10000; set => scrollRect.verticalNormalizedPosition = value; }
+
         private void Update()
         {
             if (scrollDown)
@@ -33,7 +35,9 @@ namespace NoUtil.UI
                 scrollRect.velocity = new Vector2(0, scrollAccelerationCurve.Evaluate((startPosScroll - ScrollRectPos) / startPosScroll) * scrollSpeed);
 
                 if (ScrollRectPos <= 0.0001f)
+                {
                     scrollDown = false;
+                }
             }
             scrollDownButton.interactable = !scrollDown && scrollRect.content.rect.height > scrollRect.viewport.rect.height && ScrollRectPos > 0.0001f;
         }
