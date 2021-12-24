@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Util.Extensions
+namespace NoUtil.Extentsions
 {
     public static class TextureExtentsions
     {
