@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.Reflection;
 
 #if UNITY_EDITOR
 
@@ -14,6 +15,8 @@ namespace NoUtil
     [AttributeUsage(AttributeTargets.Field)]
     public class StringDropdownAttribute : PropertyAttribute
     {
+        private static readonly BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
+
         private string targetFieldName;
         private Type classType;
 
@@ -29,13 +32,34 @@ namespace NoUtil
             var assets = AssetDatabase.FindAssets($"t:{classType}");
             if (assets.Length > 0)
             {
+                var splitField = targetFieldName.Split('.');
+
                 var asset = AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(assets[0]), classType);
-                var fieldInfo = classType.GetField(targetFieldName);
+                var fieldInfo = classType.GetField(splitField[0], bindingFlags);
                 var value = fieldInfo?.GetValue(asset) ?? default;
+
+                if (splitField.Length == 2)
+                {
+                    var arr = value as Array;
+                    List<string> list = new List<string>();
+                    foreach (var item in arr)
+                    {
+                        //Split across lines to help with debugging
+                        var type = item.GetType();
+                        var field = type.GetField(splitField[1], bindingFlags);
+                        var val = field.GetValue(item) ?? default;
+
+                        if (val is string str)
+                        {
+                            list.Add(str);
+                        }
+                    }
+
+                    return list;
+                }
                 return value is IEnumerable<string> values ? values : Array.Empty<string>();
             }
 #endif
-
             return Array.Empty<string>();
         }
 
