@@ -15,10 +15,15 @@ namespace NoUtil
     [AttributeUsage(AttributeTargets.Field)]
     public class StringDropdownAttribute : PropertyAttribute
     {
-        private static readonly BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
+        private static readonly BindingFlags bindingFlagsReflection = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
+        private static readonly BindingFlags bindingFlagFunctionLookup = BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.InvokeMethod | BindingFlags.Public;
+
+        public delegate IEnumerable<string> StringDropdownFunc(IEnumerable<object> objects);
 
         private string targetFieldName;
         private Type classType;
+        private string staticFunctionName;
+        private StringDropdownFunc func;
 
         public StringDropdownAttribute(string targetFieldName, Type classType)
         {
@@ -26,38 +31,61 @@ namespace NoUtil
             this.classType = classType;
         }
 
+        /// <summary>
+        /// Get value using a get Function
+        /// </summary>
+        /// <param name="classType">class type where you want ot get the value from</param>
+        /// <param name="staticFunctionName">Name of the static function used to get the value</param>
+        public StringDropdownAttribute(Type classType, string staticFunctionName)
+        {
+            this.classType = classType;
+            this.staticFunctionName = staticFunctionName;
+
+            var miHandler = classType.GetMethod(staticFunctionName, bindingFlagFunctionLookup);
+            func = (StringDropdownFunc)Delegate.CreateDelegate(typeof(StringDropdownFunc), miHandler);
+        }
+
         public IEnumerable<string> GetField()
         {
 #if UNITY_EDITOR
             var assets = AssetDatabase.FindAssets($"t:{classType}");
+
             if (assets.Length > 0)
             {
-                var splitField = targetFieldName.Split('.');
-
-                var asset = AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(assets[0]), classType);
-                var fieldInfo = classType.GetField(splitField[0], bindingFlags);
-                var value = fieldInfo?.GetValue(asset) ?? default;
-
-                if (splitField.Length == 2)
+                if (func != null)
                 {
-                    var arr = value as Array;
-                    List<string> list = new List<string>();
-                    foreach (var item in arr)
-                    {
-                        //Split across lines to help with debugging
-                        var type = item.GetType();
-                        var field = type.GetField(splitField[1], bindingFlags);
-                        var val = field.GetValue(item) ?? default;
-
-                        if (val is string str)
-                        {
-                            list.Add(str);
-                        }
-                    }
-
-                    return list;
+                    var loadedAssets = assets.Select(x => AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(x), classType));
+                    return func(loadedAssets);
                 }
-                return value is IEnumerable<string> values ? values : Array.Empty<string>();
+                else
+                {
+                    var splitField = targetFieldName.Split('.');
+
+                    var asset = AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(assets[0]), classType);
+                    var fieldInfo = classType.GetField(splitField[0], bindingFlagsReflection);
+                    var value = fieldInfo?.GetValue(asset) ?? default;
+
+                    if (splitField.Length == 2)
+                    {
+                        var arr = value as Array;
+                        List<string> list = new List<string>();
+                        foreach (var item in arr)
+                        {
+                            //Split across lines to help with debugging
+                            var type = item.GetType();
+                            var field = type.GetField(splitField[1], bindingFlagsReflection);
+                            var val = field.GetValue(item) ?? default;
+
+                            if (val is string str)
+                            {
+                                list.Add(str);
+                            }
+                        }
+
+                        return list;
+                    }
+                    return value is IEnumerable<string> values ? values : Array.Empty<string>();
+                }
             }
 #endif
             return Array.Empty<string>();
