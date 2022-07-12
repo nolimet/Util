@@ -9,6 +9,7 @@ using UnityEditor;
 public class ExitPlayModeOnScriptCompile
 {
 
+   #if DisableAutoMagicExit
     // Static initialiser called by Unity Editor whenever scripts are loaded (editor or play mode)
     static ExitPlayModeOnScriptCompile()
     {
@@ -43,4 +44,5 @@ public class ExitPlayModeOnScriptCompile
     private static void Unused<T>(T unusedVariable) { }
 
     private static ExitPlayModeOnScriptCompile _instance = null;
+	#endif
 }
