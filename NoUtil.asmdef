@@ -2,7 +2,6 @@
     "name": "NoUtil",
     "rootNamespace": "",
     "references": [
-        "AsyncAwaitUtil",
         "Zenject",
         "Unity.TextMeshPro"
     ],

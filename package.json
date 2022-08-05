@@ -1,18 +1,18 @@
 {
-    "name": "nl.jessestam.no-util",
-    "version": "1.0.17",
-    "displayName": "NoUtil",
-    "description": "A utility libary with many tools to speed up development",
-    "unity": "2020.3",
-    "dependencies": {
-        "com.unity.textmeshpro": "3.0.6",
-        "com.svermeulen.extenject": "9.2.0-stcf3",
-        "jillejr.newtonsoft.json-for-unity": "13.0.102",
-        "jillejr.newtonsoft.json-for-unity.converters": "1.3.0"
-    },
-    "author": {
-        "name": "Jesse Stam",
-        "email": "jesse@jessestam.nl",
-        "url": "https://github.com/nolimet"
-    }
+  "name": "nl.jessestam.no-util",
+  "version": "1.0.18",
+  "displayName": "NoUtil",
+  "description": "A utility libary with many tools to speed up development",
+  "unity": "2020.3",
+  "dependencies": {
+    "com.unity.textmeshpro": "3.0.6",
+    "com.svermeulen.extenject": "9.2.0-stcf3",
+    "jillejr.newtonsoft.json-for-unity": "13.0.102",
+    "jillejr.newtonsoft.json-for-unity.converters": "1.3.0"
+  },
+  "author": {
+    "name": "Jesse Stam",
+    "email": "jesse@jessestam.nl",
+    "url": "https://github.com/nolimet"
+  }
 }
