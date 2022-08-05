@@ -18,7 +18,7 @@ namespace NoUtil.Extensions
 
             try
             {
-                string json = JsonConvert.SerializeObject(data, Formatting.None);
+                var json = JsonConvert.SerializeObject(data, Formatting.None);
                 using (var writer = file.CreateText())
                 {
                    await writer.WriteAsync(json);
