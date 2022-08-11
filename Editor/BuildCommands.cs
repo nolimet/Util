@@ -99,8 +99,19 @@ public static class BuildCommands
 
     private static string FormatBuildName(string path)
     {
-        path = $"{path}/[{PlayerSettings.productName}_{PlayerSettings.companyName}]_{{{System.DateTime.Now.ToString("dd-MM-yyyy_HH-mm") }}}_{PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup)}";
         var buildTarget = EditorUserBuildSettings.activeBuildTarget;
+        switch (buildTarget)
+        {
+            case BuildTarget.StandaloneWindows:
+            case BuildTarget.StandaloneWindows64:
+                path = $"{path}/{PlayerSettings.companyName}/{PlayerSettings.productName}/{System.DateTime.Now:dd-MM-yyyy_HH-mm}/{PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup)}/{PlayerSettings.productName}.exe";
+                break;
+            
+            default:
+                path = $"{path}/[{PlayerSettings.productName}_{PlayerSettings.companyName}]_{{{System.DateTime.Now.ToString("dd-MM-yyyy_HH-mm") }}}_{PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup)}";
+                break;
+        }
+        
         switch (buildTarget)
         {
             case BuildTarget.Android:
