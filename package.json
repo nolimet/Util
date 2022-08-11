@@ -1,6 +1,6 @@
 {
   "name": "nl.jessestam.no-util",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "displayName": "NoUtil",
   "description": "A utility libary with many tools to speed up development",
   "unity": "2020.3",
