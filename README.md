@@ -17,3 +17,4 @@ add this to the manifest.json of the project implementing this libary
     }
   ]
 ```
+Alternatively use https://openupm.com/packages/nl.jessestam.no-util/
