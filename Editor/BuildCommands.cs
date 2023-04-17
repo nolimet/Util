@@ -8,11 +8,11 @@ using UnityEngine;
 
 public static class BuildCommands
 {
-    private const ulong kebiByte = 1024;
-    private const ulong mebibyte = kebiByte * kebiByte;
+    private const ulong KebiByte = 1024;
+    private const ulong Mebibyte = KebiByte * KebiByte;
     private const string CustomBuildPathKey = "CustomBuildPath";
     private const string CleanUpBuildsKey = "CleanUpBuildsAuto";
-    private const int maxBuildsPerDay = 4;
+    private const int MaxBuildsPerDay = 4;
 
     [MenuItem("File/Build App &b")]
     public static void BuildAppAuto()
@@ -100,39 +100,30 @@ public static class BuildCommands
     private static string FormatBuildName(string path)
     {
         var buildTarget = EditorUserBuildSettings.activeBuildTarget;
-        switch (buildTarget)
+        path = $"{path}/{PlayerSettings.companyName}/{PlayerSettings.productName}/{System.DateTime.Now:dd-MM-yyyy_HH-mm}";
+        path = buildTarget switch
         {
-            case BuildTarget.StandaloneWindows:
-            case BuildTarget.StandaloneWindows64:
-                path = $"{path}/{PlayerSettings.companyName}/{PlayerSettings.productName}/{System.DateTime.Now:dd-MM-yyyy_HH-mm}/{PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup)}/{PlayerSettings.productName}.exe";
-                break;
-            
-            default:
-                path = $"{path}/[{PlayerSettings.productName}_{PlayerSettings.companyName}]_{{{System.DateTime.Now.ToString("dd-MM-yyyy_HH-mm") }}}_{PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup)}";
-                break;
-        }
-        
-        switch (buildTarget)
-        {
-            case BuildTarget.Android:
-                path += ".apk";
-                break;
-        }
+            BuildTarget.StandaloneWindows or BuildTarget.StandaloneWindows64 => $"{path}/{PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup)}/{PlayerSettings.productName}.exe",
+            BuildTarget.StandaloneOSX => $"{path}/{PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup)}/{PlayerSettings.productName}",
+            BuildTarget.Android=>$"{path}/{PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup)}/{PlayerSettings.productName}.apk",
+            _ => $"{path}-{buildTarget}/{PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup)}/{PlayerSettings.productName}"
+        };
+        Debug.Log($"Building to path - {path}");
         return path;
     }
 
     private static void ProcessReport(BuildReport report)
     {
-        BuildSummary summary = report.summary;
-        if (summary.result == BuildResult.Succeeded)
+        var summary = report.summary;
+        switch (summary.result)
         {
-            Debug.Log("Build succeeded: " + (summary.totalSize / mebibyte) + " MiB");
-            Debug.Log("Build took: " + summary.totalTime.ToString());
-        }
-
-        if (summary.result == BuildResult.Failed)
-        {
-            Debug.Log("Build failed");
+            case BuildResult.Succeeded:
+                Debug.Log($"Build succeeded: {(summary.totalSize / Mebibyte)} MiB");
+                Debug.Log($"Build took: {summary.totalTime}");
+                break;
+            case BuildResult.Failed:
+                Debug.Log("Build failed");
+                break;
         }
     }
 
@@ -148,7 +139,7 @@ public static class BuildCommands
         EditorPrefs.SetBool(CleanUpBuildsKey, EditorUtility.DisplayDialog("Auto Cleanup", "Should script limit number of builds per day?", "Yes", "No"));
     }
 
-    private static void CleanupBuilds(bool byPassCheck = false)
+    private static void CleanupBuilds(bool byPassCheck)
     {
         string directoryPath = SetBuildPath(false);
         if (string.IsNullOrWhiteSpace(directoryPath))
@@ -156,7 +147,7 @@ public static class BuildCommands
 
         if (!byPassCheck)
         {
-            bool canDoCleanup = false;
+            bool canDoCleanup;
             if (!EditorPrefs.HasKey(CleanUpBuildsKey))
             {
                 canDoCleanup = EditorUtility.DisplayDialog("Auto Cleanup", "Should script limit number of builds per day?", "Yes", "No");
@@ -169,8 +160,9 @@ public static class BuildCommands
         }
 
         DirectoryInfo directory = new DirectoryInfo(directoryPath);
-        IEnumerable<IGrouping<System.DateTime, FileInfo>> groupedFiles = directory.GetFiles("*.apk").GroupBy(x => x.CreationTime.Date).Where(g => g.Count() > maxBuildsPerDay);
-        foreach (IGrouping<System.DateTime, FileInfo> fileGroup in groupedFiles)
+        var groupedFiles = directory.GetFiles("*.apk").GroupBy(x => x.CreationTime.Date).Where(g => g.Count() > MaxBuildsPerDay);
+        
+        foreach (var fileGroup in groupedFiles)
         {
             var orderedGroup = fileGroup.OrderBy(x => x.CreationTime).ToArray();
             for (int i = 0; i < orderedGroup.Length - 4; i++)
@@ -194,7 +186,7 @@ public static class BuildCommands
 
     private static (bool autoRun, bool canceled) AutoRunCheck(string buildTypeName)
     {
-        int result = EditorUtility.DisplayDialogComplex(buildTypeName, "Should Autorun?", "Yes", "No", "Cancel");
+        int result = EditorUtility.DisplayDialogComplex(buildTypeName, $"Target: {EditorUserBuildSettings.activeBuildTarget}\nShould Autorun?", "Yes", "No", "Cancel");
         return (result == 0, result == 2);
     }
 
