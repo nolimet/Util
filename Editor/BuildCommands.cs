@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.SharpZipLib.Zip;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
@@ -219,6 +220,11 @@ public static class BuildCommands
     private static void PreProcess()
     {
         PlayerSettings.Android.bundleVersionCode++;
+    }
+
+    private static void ZipResult()
+    {
+      
     }
 
     #region Firebase
