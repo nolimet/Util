@@ -30,6 +30,7 @@ public static class BuildCommands
 #endif
         CleanupOldSymbols(path);
 
+        string zipPath = FormatZipPath(path);
         path = FormatBuildName(path);
 
         PreProcess();
@@ -38,6 +39,7 @@ public static class BuildCommands
         BuildReport report = BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, path, buildTarget, autoRun ? BuildOptions.AutoRunPlayer : BuildOptions.None);
 
         ProcessReport(report);
+        ZipResult(zipPath,path);
         CleanupBuilds(false);
     }
 
@@ -55,6 +57,8 @@ public static class BuildCommands
         SetupFireBase(CheckIsDevelopmentBuild());
 #endif
         CleanupOldSymbols(path);
+        
+        string zipPath = FormatZipPath(path);
         path = FormatBuildName(path);
 
         PreProcess();
@@ -63,6 +67,7 @@ public static class BuildCommands
         BuildReport report = BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, path, buildTarget, autoRun ? BuildOptions.AutoRunPlayer : BuildOptions.None);
 
         ProcessReport(report);
+        ZipResult(zipPath,path);
         CleanupBuilds(false);
     }
 
@@ -80,6 +85,8 @@ public static class BuildCommands
         SetupFireBase(CheckIsDevelopmentBuild());
 #endif
         CleanupOldSymbols(path);
+        
+        string zipPath = FormatZipPath(path);
         path = FormatBuildName(path);
 
         PreProcess();
@@ -92,6 +99,7 @@ public static class BuildCommands
         BuildReport report = BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, path, buildTarget, options);
 
         ProcessReport(report);
+        ZipResult(zipPath,path);
         CleanupBuilds(false);
     }
 
@@ -110,6 +118,19 @@ public static class BuildCommands
             _ => $"{path}-{buildTarget}/{PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup)}/{PlayerSettings.productName}"
         };
         Debug.Log($"Building to path - {path}");
+        return path;
+    }
+
+    private static string FormatZipPath(string path)
+    {
+        var buildTarget = EditorUserBuildSettings.activeBuildTarget;
+        var date = System.DateTime.Now;
+        path = $"{path}/{PlayerSettings.companyName}/{PlayerSettings.productName}/{date:dd-MM-yyyy_HH-mm}";
+        path = buildTarget switch
+        {
+            BuildTarget.StandaloneWindows or BuildTarget.StandaloneWindows64 => $"{path}/{date:yyyyMMddmmhh}-{PlayerSettings.productName}.zip",
+            _ => string.Empty
+        };
         return path;
     }
 
@@ -211,7 +232,7 @@ public static class BuildCommands
         string GetProjectName()
         {
             string[] s = Application.dataPath.Split('/');
-            string projectName = s[s.Length - 2];
+            string projectName = s[^2];
             Debug.Log("project = " + projectName);
             return projectName;
         }
@@ -222,9 +243,11 @@ public static class BuildCommands
         PlayerSettings.Android.bundleVersionCode++;
     }
 
-    private static void ZipResult()
+    private static void ZipResult(string zipFilePath, string outputPath)
     {
-      
+        if (string.IsNullOrEmpty(zipFilePath)) return;
+        
+        
     }
 
     #region Firebase
