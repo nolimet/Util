@@ -6,10 +6,14 @@ name: Sign and publish
 #
 # Needs the repository secrets UPM_SERVICE_ACCOUNT_KEY_ID, UPM_SERVICE_ACCOUNT_KEY_SECRET (a Unity service account with
 # package signing permission) and UPM_ORG_ID (the Unity organization id).
+#
+# Running it by hand (Actions > Sign and publish > Run workflow) is a dry run: it packs, signs and verifies the package
+# and uploads the tarball as a workflow artifact, without creating a release or contacting OpenUPM.
 on:
   push:
     tags:
       - '*.*.*'
+  workflow_dispatch:
 
 permissions:
   contents: write # create the GitHub Release
@@ -36,7 +40,7 @@ jobs:
           echo "PACKAGE_NAME=$package_name" >> "$GITHUB_ENV"
           echo "PACKAGE_VERSION=$package_version" >> "$GITHUB_ENV"
 
-          if [ "$package_version" != "$GITHUB_REF_NAME" ]; then
+          if [ "$GITHUB_REF_TYPE" = "tag" ] && [ "$package_version" != "$GITHUB_REF_NAME" ]; then
             printf 'Tag %s does not match package.json version %s\n' "$GITHUB_REF_NAME" "$package_version" >&2
             exit 1
           fi
@@ -77,12 +81,22 @@ jobs:
           printf 'Signed archive: %s\n' "$(basename "$archive")"
           tar -tzf "$archive" | head -50
 
+      - name: Keep the dry run tarball
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-package
+          path: ${{ env.PACKAGE_ARCHIVE }}
+          retention-days: 7
+
       - name: Create GitHub Release
+        if: github.event_name == 'push' && github.ref_type == 'tag'
         uses: softprops/action-gh-release@v2
         with:
           files: ${{ env.PACKAGE_ARCHIVE }}
 
       - name: Publish on OpenUPM
+        if: github.event_name == 'push' && github.ref_type == 'tag'
         uses: openupm/openupm-action@v1
         with:
           package: nl.jessestam.no-util
