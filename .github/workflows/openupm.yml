@@ -72,14 +72,15 @@ jobs:
           fi
 
           archive="${archives[0]}"
-          tar -tzf "$archive" | grep -qx 'package/package.json'
-          tar -tzf "$archive" | grep -qx 'package/.attestation.p7m'
+          listing="$(tar -tzf "$archive")"
+          grep -qx 'package/package.json' <<< "$listing"
+          grep -qx 'package/.attestation.p7m' <<< "$listing"
           tar -xOzf "$archive" package/package.json | jq -e --arg name "$PACKAGE_NAME" --arg version "$PACKAGE_VERSION" \
             '.name == $name and .version == $version'
 
           echo "PACKAGE_ARCHIVE=$archive" >> "$GITHUB_ENV"
           printf 'Signed archive: %s\n' "$(basename "$archive")"
-          tar -tzf "$archive" | head -50
+          printf '%s\n' "$listing"
 
       - name: Keep the dry run tarball
         if: github.event_name == 'workflow_dispatch'
