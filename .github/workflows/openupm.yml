@@ -1,25 +1,89 @@
-name: OpenUPM
+name: Sign and publish
 
-# Asks OpenUPM to scan the repository for a version tag and waits until that version is installable from the registry.
-# OpenUPM only accepts the request from a run on the tag itself (the OIDC token's ref must be the tag), so this runs on
-# every pushed version tag. To retry a tag by hand use Actions > OpenUPM > Run workflow and pick the tag as the ref,
-# that only works for tags whose commit contains this workflow.
+# For every pushed version tag: pack the package with Unity's UPM CLI, signed for the Unity organization, attach the
+# signed tarball to a GitHub Release with the same tag, then ask OpenUPM to publish it and wait until it is installable.
+# OpenUPM tracks this package with trackingMode: githubRelease, so it publishes the release asset unchanged.
+#
+# Needs the repository secrets UPM_SERVICE_ACCOUNT_KEY_ID, UPM_SERVICE_ACCOUNT_KEY_SECRET (a Unity service account with
+# package signing permission) and UPM_ORG_ID (the Unity organization id).
 on:
   push:
     tags:
       - '*.*.*'
-  workflow_dispatch:
 
 permissions:
-  id-token: write
-  contents: read
+  contents: write # create the GitHub Release
+  id-token: write # OIDC token for the OpenUPM trigger
 
 jobs:
-  publish:
-    if: github.ref_type == 'tag'
+  release:
     runs-on: ubuntu-latest
+    env:
+      UPM_SERVICE_ACCOUNT_KEY_ID: ${{ secrets.UPM_SERVICE_ACCOUNT_KEY_ID }}
+      UPM_SERVICE_ACCOUNT_KEY_SECRET: ${{ secrets.UPM_SERVICE_ACCOUNT_KEY_SECRET }}
+      UPM_ORG_ID: ${{ secrets.UPM_ORG_ID }}
+      STAGING_DIR: ${{ runner.temp }}/package
+      DIST_DIR: ${{ runner.temp }}/dist
+
     steps:
-      - uses: openupm/openupm-action@v1
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check the tag matches package.json
+        run: |
+          package_name="$(jq -r '.name' package.json)"
+          package_version="$(jq -r '.version' package.json)"
+          echo "PACKAGE_NAME=$package_name" >> "$GITHUB_ENV"
+          echo "PACKAGE_VERSION=$package_version" >> "$GITHUB_ENV"
+
+          if [ "$package_version" != "$GITHUB_REF_NAME" ]; then
+            printf 'Tag %s does not match package.json version %s\n' "$GITHUB_REF_NAME" "$package_version" >&2
+            exit 1
+          fi
+
+      - name: Stage the package
+        # The package lives at the repository root, leave the repository and CI files out of the tarball
+        run: |
+          mkdir -p "$STAGING_DIR"
+          rsync -a --exclude '.git' --exclude '.github' --exclude '.gitignore' ./ "$STAGING_DIR/"
+
+      - name: Install Unity UPM CLI
+        run: |
+          curl -fsSL https://cdn.packages.unity.com/upm-cli/install.sh -o install.sh
+          bash install.sh
+          echo "$HOME/.upm/bin" >> "$GITHUB_PATH"
+
+      - name: Pack and sign
+        run: |
+          mkdir -p "$DIST_DIR"
+          upm pack "$STAGING_DIR" --organization-id "$UPM_ORG_ID" --destination "$DIST_DIR"
+
+      - name: Verify the signed package
+        run: |
+          shopt -s nullglob
+          archives=("$DIST_DIR"/*.tgz "$DIST_DIR"/*.tar.gz)
+          if [ "${#archives[@]}" -ne 1 ]; then
+            printf 'Expected exactly one signed package archive, found %s\n' "${#archives[@]}" >&2
+            exit 1
+          fi
+
+          archive="${archives[0]}"
+          tar -tzf "$archive" | grep -qx 'package/package.json'
+          tar -tzf "$archive" | grep -qx 'package/.attestation.p7m'
+          tar -xOzf "$archive" package/package.json | jq -e --arg name "$PACKAGE_NAME" --arg version "$PACKAGE_VERSION" \
+            '.name == $name and .version == $version'
+
+          echo "PACKAGE_ARCHIVE=$archive" >> "$GITHUB_ENV"
+          printf 'Signed archive: %s\n' "$(basename "$archive")"
+          tar -tzf "$archive" | head -50
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.PACKAGE_ARCHIVE }}
+
+      - name: Publish on OpenUPM
+        uses: openupm/openupm-action@v1
         with:
           package: nl.jessestam.no-util
           tag: ${{ github.ref_name }}
