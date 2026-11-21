@@ -1,0 +1,26 @@
+name: OpenUPM
+
+# Asks OpenUPM to scan the repository for a version tag and waits until that version is installable from the registry.
+# Runs on every pushed version tag. Run it by hand (Actions > OpenUPM > Run workflow) to publish a tag that already exists.
+on:
+  push:
+    tags:
+      - '*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag to publish, for example 1.1.0
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: openupm/openupm-action@v1
+        with:
+          package: nl.jessestam.no-util
+          tag: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
