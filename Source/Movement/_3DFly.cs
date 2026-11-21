@@ -37,7 +37,7 @@ namespace NoUtil.Movement
             }
             else if (rigidbody)
             {
-                rigidbody.velocity = Vector3.zero;
+                rigidbody.linearVelocity = Vector3.zero;
             }
         }
     }

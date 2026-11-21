@@ -1,4 +1,6 @@
 //#define Firebase_Enabled
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -241,6 +243,8 @@ public static class BuildCommands
     private static void PreProcess()
     {
         PlayerSettings.Android.bundleVersionCode++;
+        var date = DateTime.Now;
+        PlayerSettings.bundleVersion = date.ToString("yyyyMMddHHmmss");
     }
 
     private static void ZipResult(string zipFilePath, string outputPath)
