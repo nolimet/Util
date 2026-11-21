@@ -2,6 +2,8 @@
     "name": "NoUtil",
     "rootNamespace": "NoUtil",
     "references": [
+        "UnityEngine.UI",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
