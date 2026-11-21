@@ -1,9 +1,7 @@
 {
     "name": "NoUtil",
-    "rootNamespace": "",
+    "rootNamespace": "NoUtil",
     "references": [
-        "Zenject",
-        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
