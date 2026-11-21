@@ -26,8 +26,8 @@ jobs:
       UPM_SERVICE_ACCOUNT_KEY_ID: ${{ secrets.UPM_SERVICE_ACCOUNT_KEY_ID }}
       UPM_SERVICE_ACCOUNT_KEY_SECRET: ${{ secrets.UPM_SERVICE_ACCOUNT_KEY_SECRET }}
       UPM_ORG_ID: ${{ secrets.UPM_ORG_ID }}
-      STAGING_DIR: ${{ runner.temp }}/package
-      DIST_DIR: ${{ runner.temp }}/dist
+      STAGING_DIR: /tmp/no-util-package
+      DIST_DIR: /tmp/no-util-dist
 
     steps:
       - name: Check out repository
